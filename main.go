@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"nhncli/cmd"
+	_ "nhncli/cmd/compute"
 	_ "nhncli/cmd/vpc"
 )
 
