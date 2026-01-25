@@ -34,9 +34,10 @@ func NewClient(profileName string, region string, debug bool) (*Client, error) {
 		region = profile.Region
 	}
 
+	// VPC API는 Identity 인증 사용
 	token, _, err := auth.GetAuthenticatedToken(profileName, profile, debug)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Identity 인증 실패: %w", err)
 	}
 
 	return &Client{

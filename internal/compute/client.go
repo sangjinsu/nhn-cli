@@ -35,17 +35,16 @@ func NewClient(profileName string, region string, debug bool) (*Client, error) {
 		region = profile.Region
 	}
 
+	// Compute API는 Identity 인증 사용
 	token, tenantID, err := auth.GetAuthenticatedToken(profileName, profile, debug)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Identity 인증 실패: %w", err)
 	}
 
-	if tenantID == "" && profile.TenantID != "" {
-		tenantID = profile.TenantID
-	}
-
+	// Identity 인증 시 응답에서 tenantID를 가져옴
+	// 프로필에 설정된 TenantID를 fallback으로 사용
 	if tenantID == "" {
-		return nil, fmt.Errorf("Tenant ID가 필요합니다. Identity 인증을 사용하거나 프로필에 Tenant ID를 설정하세요")
+		tenantID = profile.TenantID
 	}
 
 	return &Client{
