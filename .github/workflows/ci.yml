@@ -1,0 +1,49 @@
+name: Go Multi-Platform Build and Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.21"
+          cache: true
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Check formatting (Linux only)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          if [ -n "$(gofmt -s -l .)" ]; then
+            echo "Go files must be formatted with gofmt. Run:"
+            echo "  gofmt -s -w ."
+            gofmt -s -l .
+            exit 1
+          fi
+
+      - name: Run tests
+        run: go test -v -race ./...
+
+      - name: Build (Unix)
+        if: matrix.os != 'windows-latest'
+        run: go build -v -o nhn ./main.go
+
+      - name: Build (Windows)
+        if: matrix.os == 'windows-latest'
+        run: go build -v -o nhn.exe ./main.go
