@@ -119,7 +119,7 @@ func runSubnetDescribe(cmd *cobra.Command, args []string) error {
 	fmt.Printf("State:           %s\n", s.State)
 	fmt.Printf("Available IPs:   %d\n", s.AvailableIPCount)
 	fmt.Printf("Routing Table:   %s\n", s.RoutingTableID)
-	fmt.Printf("Created:         %s\n", s.CreateTime.Format("2006-01-02 15:04:05"))
+	fmt.Printf("Created:         %s\n", s.CreateTime)
 
 	return nil
 }

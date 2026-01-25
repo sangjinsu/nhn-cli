@@ -1,16 +1,14 @@
 package vpc
 
-import "time"
-
 type VPC struct {
-	ID              string    `json:"id"`
-	Name            string    `json:"name"`
-	CIDRv4          string    `json:"cidrv4"`
-	TenantID        string    `json:"tenant_id"`
-	State           string    `json:"state"`
-	CreateTime      time.Time `json:"create_time"`
-	Shared          bool      `json:"shared"`
-	RouterExternal  bool      `json:"router:external"`
+	ID             string `json:"id"`
+	Name           string `json:"name"`
+	CIDRv4         string `json:"cidrv4"`
+	TenantID       string `json:"tenant_id"`
+	State          string `json:"state"`
+	CreateTime     string `json:"create_time"`
+	Shared         bool   `json:"shared"`
+	RouterExternal bool   `json:"router:external"`
 }
 
 type VPCListResponse struct {
@@ -40,18 +38,18 @@ type VPCUpdateBody struct {
 }
 
 type Subnet struct {
-	ID              string    `json:"id"`
-	Name            string    `json:"name"`
-	VPCID           string    `json:"vpc_id"`
-	CIDR            string    `json:"cidr"`
-	TenantID        string    `json:"tenant_id"`
-	State           string    `json:"state"`
-	CreateTime      time.Time `json:"create_time"`
-	AvailableIPCount int      `json:"available_ip_count"`
-	VPC             *VPC      `json:"vpc,omitempty"`
-	Shared          bool      `json:"shared"`
-	Gateway         string    `json:"gateway"`
-	RoutingTableID  string    `json:"routingtable_id"`
+	ID               string `json:"id"`
+	Name             string `json:"name"`
+	VPCID            string `json:"vpc_id"`
+	CIDR             string `json:"cidr"`
+	TenantID         string `json:"tenant_id"`
+	State            string `json:"state"`
+	CreateTime       string `json:"create_time"`
+	AvailableIPCount int    `json:"available_ip_count"`
+	VPC              *VPC   `json:"vpc,omitempty"`
+	Shared           bool   `json:"shared"`
+	Gateway          string `json:"gateway"`
+	RoutingTableID   string `json:"routingtable_id"`
 }
 
 type SubnetListResponse struct {

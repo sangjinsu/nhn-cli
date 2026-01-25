@@ -42,7 +42,7 @@ func runDescribe(cmd *cobra.Command, args []string) error {
 	fmt.Printf("CIDR:        %s\n", v.CIDRv4)
 	fmt.Printf("State:       %s\n", v.State)
 	fmt.Printf("Tenant ID:   %s\n", v.TenantID)
-	fmt.Printf("Created:     %s\n", v.CreateTime.Format("2006-01-02 15:04:05"))
+	fmt.Printf("Created:     %s\n", v.CreateTime)
 
 	return nil
 }
