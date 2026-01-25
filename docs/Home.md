@@ -103,4 +103,6 @@ nhn compute instance list
 
 ## 라이선스
 
-MIT License
+PolyForm Noncommercial License 1.0.0
+
+이 소프트웨어는 비상업적 목적으로만 사용할 수 있습니다.

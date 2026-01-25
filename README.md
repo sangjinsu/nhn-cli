@@ -3,7 +3,7 @@
 AWS CLI 스타일의 NHN Cloud 명령줄 인터페이스입니다.
 
 [![Go Version](https://img.shields.io/badge/Go-1.22+-00ADD8?style=flat&logo=go)](https://go.dev/)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-PolyForm%20Noncommercial-blue.svg)](LICENSE)
 
 ## 📋 목차
 
@@ -807,7 +807,9 @@ nhn --profile <profile-name> vpc list
 
 ## 📜 라이선스
 
-MIT License
+PolyForm Noncommercial License 1.0.0
+
+이 소프트웨어는 비상업적 목적으로만 사용할 수 있습니다. 자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.
 
 ---
 

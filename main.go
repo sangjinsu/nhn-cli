@@ -1,3 +1,7 @@
+// Copyright (c) 2026 Jinsu. All rights reserved.
+// Use of this source code is governed by a PolyForm Noncommercial License 1.0.0
+// that can be found in the LICENSE file.
+
 package main
 
 import (
