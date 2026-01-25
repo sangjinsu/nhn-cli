@@ -12,21 +12,17 @@ const (
 	ConfigFileName = "config.json"
 )
 
-type AuthType string
-
-const (
-	AuthTypeOAuth    AuthType = "oauth"
-	AuthTypeIdentity AuthType = "identity"
-)
-
 type ProfileConfig struct {
-	AuthType          AuthType `json:"auth_type"`
-	UserAccessKeyID   string   `json:"user_access_key_id,omitempty"`
-	SecretAccessKey   string   `json:"secret_access_key,omitempty"`
-	TenantID          string   `json:"tenant_id,omitempty"`
-	Username          string   `json:"username,omitempty"`
-	Password          string   `json:"password,omitempty"`
-	Region            string   `json:"region"`
+	// Identity 인증 (OpenStack API용) - 필수
+	TenantID string `json:"tenant_id"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+
+	// OAuth 인증 (NHN Cloud 고유 API용) - 선택
+	UserAccessKeyID string `json:"user_access_key_id,omitempty"`
+	SecretAccessKey string `json:"secret_access_key,omitempty"`
+
+	Region string `json:"region"`
 }
 
 type Config struct {
