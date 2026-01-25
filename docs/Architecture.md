@@ -303,7 +303,9 @@ type JSONFormatter struct { ... }
 {
   "profiles": {
     "default": {
-      "auth_type": "oauth",
+      "tenant_id": "...",
+      "username": "...",
+      "password": "...",
       "user_access_key_id": "...",
       "secret_access_key": "...",
       "region": "KR1"
@@ -311,6 +313,8 @@ type JSONFormatter struct { ... }
   }
 }
 ```
+
+> **참고**: Identity 인증(tenant_id, username, password)과 OAuth 인증(user_access_key_id, secret_access_key) 모두 필수입니다.
 
 ### ~/.nhn/credentials.json
 

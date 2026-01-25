@@ -18,8 +18,8 @@ NHN Cloud CLI 설치 방법을 상세히 설명합니다.
 ### 1. 저장소 클론
 
 ```bash
-git clone https://github.com/your-repo/nhncli.git
-cd nhncli
+git clone https://github.com/sangjinsu/nhn-cli.git
+cd nhn-cli
 ```
 
 ### 2. 의존성 설치

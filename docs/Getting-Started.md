@@ -16,8 +16,8 @@
 
 ```bash
 # 저장소 클론
-git clone https://github.com/your-repo/nhncli.git
-cd nhncli
+git clone https://github.com/sangjinsu/nhn-cli.git
+cd nhn-cli
 
 # 빌드
 go build -o nhn main.go
@@ -39,27 +39,45 @@ nhn version
 nhn configure
 ```
 
-대화형 프롬프트가 시작됩니다:
+대화형 프롬프트에서 Identity와 OAuth 인증 정보를 순차적으로 입력합니다:
 
 ```
 프로필 이름 [default]:
-=== 인증 방식 선택 ===
-1. OAuth 인증 (User Access Key ID) - 권장
-2. Identity 인증 (Tenant ID + Username)
-선택 [1]: 1
 
-=== OAuth 인증 설정 ===
+=== NHN Cloud 인증 설정 ===
+
+📌 VPC, Compute 등 OpenStack 기반 API 사용을 위해 Identity 인증 정보가 필요합니다.
+
+--- Identity 인증 (필수) ---
+
+Tenant ID: your-tenant-id
+Username (이메일 주소): your-email@example.com
+API Password: your-api-password
+
+--- OAuth 인증 (필수) ---
+
 User Access Key ID: your-access-key-id
 Secret Access Key: your-secret-access-key
 
 === 리전 설정 ===
+
 기본 리전 [KR1]: KR1
 
 ✅ 프로필 'default' 설정이 저장되었습니다.
+
+🔐 Identity 인증 정보 검증 중...
+✅ Identity 인증 성공!
 ```
 
-### OAuth 키 발급 방법
+### 인증 정보 발급 방법
 
+**Identity 인증 (Tenant ID, API Password):**
+1. [NHN Cloud 콘솔](https://console.nhncloud.com) 로그인
+2. **Compute > Instance** 메뉴 이동
+3. **API 엔드포인트 설정** 버튼 클릭
+4. Tenant ID 확인 및 API 비밀번호 설정
+
+**OAuth 인증 (User Access Key ID):**
 1. [NHN Cloud 콘솔](https://console.nhncloud.com) 로그인
 2. 오른쪽 상단의 이메일 주소 클릭
 3. **API 보안 설정** 메뉴 선택

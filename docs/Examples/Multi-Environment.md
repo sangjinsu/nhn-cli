@@ -26,10 +26,15 @@ nhn configure --profile dev
 
 ```
 프로필 이름 [dev]:
-=== 인증 방식 선택 ===
-선택 [1]: 1
 
-=== OAuth 인증 설정 ===
+=== NHN Cloud 인증 설정 ===
+
+--- Identity 인증 (필수) ---
+Tenant ID: dev-tenant-id
+Username (이메일 주소): dev@example.com
+API Password: dev-api-password
+
+--- OAuth 인증 (필수) ---
 User Access Key ID: dev-access-key-id
 Secret Access Key: dev-secret-access-key
 
@@ -62,11 +67,11 @@ nhn configure list
 
 **출력:**
 ```
-PROFILE     AUTH TYPE   REGION
-default     oauth       KR1
-dev         oauth       KR1
-staging     oauth       KR1
-prod        oauth       KR2
+PROFILE     IDENTITY    OAUTH    REGION
+default     ✓           ✓        KR1
+dev         ✓           ✓        KR1
+staging     ✓           ✓        KR1
+prod        ✓           ✓        KR2
 ```
 
 ---
@@ -233,8 +238,8 @@ jobs:
 
       - name: Install NHN CLI
         run: |
-          git clone https://github.com/your-repo/nhncli.git
-          cd nhncli
+          git clone https://github.com/sangjinsu/nhn-cli.git
+          cd nhn-cli
           go build -o nhn main.go
           sudo mv nhn /usr/local/bin/
 
@@ -245,7 +250,9 @@ jobs:
           {
             "profiles": {
               "default": {
-                "auth_type": "oauth",
+                "tenant_id": "${{ secrets.NHN_TENANT_ID }}",
+                "username": "${{ secrets.NHN_USERNAME }}",
+                "password": "${{ secrets.NHN_PASSWORD }}",
                 "user_access_key_id": "${{ secrets.NHN_ACCESS_KEY_ID }}",
                 "secret_access_key": "${{ secrets.NHN_SECRET_ACCESS_KEY }}",
                 "region": "KR1"
@@ -282,15 +289,17 @@ variables:
 
 .nhn-setup: &nhn-setup
   before_script:
-    - git clone https://github.com/your-repo/nhncli.git
-    - cd nhncli && go build -o /usr/local/bin/nhn main.go && cd ..
+    - git clone https://github.com/sangjinsu/nhn-cli.git
+    - cd nhn-cli && go build -o /usr/local/bin/nhn main.go && cd ..
     - mkdir -p ~/.nhn
     - |
       cat > ~/.nhn/config.json << EOF
       {
         "profiles": {
           "default": {
-            "auth_type": "oauth",
+            "tenant_id": "$NHN_TENANT_ID",
+            "username": "$NHN_USERNAME",
+            "password": "$NHN_PASSWORD",
             "user_access_key_id": "$NHN_ACCESS_KEY_ID",
             "secret_access_key": "$NHN_SECRET_ACCESS_KEY",
             "region": "$NHN_REGION"

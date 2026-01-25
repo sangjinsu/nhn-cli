@@ -75,8 +75,8 @@ a1b2c3d4-...                            web-server  ACTIVE  m2.c1m2     192.168.
 
 ```bash
 # 1. 빌드 및 설치
-git clone https://github.com/your-repo/nhncli.git
-cd nhncli
+git clone https://github.com/sangjinsu/nhn-cli.git
+cd nhn-cli
 go build -o nhn main.go
 sudo mv nhn /usr/local/bin/
 

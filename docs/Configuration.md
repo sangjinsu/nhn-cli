@@ -4,22 +4,30 @@ NHN Cloud CLI의 인증 및 프로필 설정 방법을 설명합니다.
 
 ---
 
-## 인증 방식 비교
+## 인증 방식
 
-NHN Cloud CLI는 두 가지 인증 방식을 지원합니다:
+NHN Cloud CLI는 **Identity 인증**과 **OAuth 인증** 모두를 필수로 요구합니다:
 
-| 항목 | OAuth 인증 (권장) | Identity 인증 |
-|------|------------------|---------------|
-| **필요 정보** | User Access Key ID, Secret Access Key | Tenant ID, Username, Password |
-| **토큰 유효기간** | 12시간 | 12시간 |
-| **보안성** | 높음 (키 회전 가능) | 중간 |
-| **권장 사용** | 프로덕션, 자동화 | 개발, 테스트 |
+| 인증 방식 | 필요 정보 | 용도 |
+|----------|----------|------|
+| **Identity 인증** | Tenant ID, Username, Password | VPC, Compute 등 OpenStack 기반 API |
+| **OAuth 인증** | User Access Key ID, Secret Access Key | 기타 NHN Cloud API |
+
+> **참고**: 두 인증 방식 모두 필수입니다. `nhn configure` 명령 실행 시 순차적으로 입력합니다.
 
 ---
 
-## OAuth 인증 설정 (권장)
+## 인증 정보 발급
 
-### 1. API 키 발급
+### Identity 인증 정보
+
+1. [NHN Cloud 콘솔](https://console.nhncloud.com) 로그인
+2. **Compute > Instance** 메뉴 이동
+3. **API 엔드포인트 설정** 버튼 클릭
+4. **Tenant ID** 확인
+5. **API 비밀번호** 설정 (미설정 시 새로 생성)
+
+### OAuth 인증 정보
 
 1. [NHN Cloud 콘솔](https://console.nhncloud.com) 로그인
 2. 오른쪽 상단의 이메일 주소 클릭
@@ -29,63 +37,65 @@ NHN Cloud CLI는 두 가지 인증 방식을 지원합니다:
 
 > Secret Access Key는 발급 시 한 번만 표시됩니다. 안전한 곳에 보관하세요.
 
-### 2. CLI 설정
+---
+
+## CLI 설정
 
 ```bash
 nhn configure
 ```
 
+대화형 프롬프트에서 Identity와 OAuth 인증 정보를 순차적으로 입력합니다:
+
 ```
 프로필 이름 [default]:
-=== 인증 방식 선택 ===
-1. OAuth 인증 (User Access Key ID) - 권장
-2. Identity 인증 (Tenant ID + Username)
-선택 [1]: 1
 
-=== OAuth 인증 설정 ===
+=== NHN Cloud 인증 설정 ===
+
+📌 VPC, Compute 등 OpenStack 기반 API 사용을 위해 Identity 인증 정보가 필요합니다.
+
+--- Identity 인증 (필수) ---
+
+📌 Tenant ID 확인 방법:
+   1. NHN Cloud 콘솔 (https://console.nhncloud.com) 로그인
+   2. 프로젝트 선택 후 'Compute > Instance' 메뉴 이동
+   3. 'API 엔드포인트 설정' 버튼 클릭
+   4. Tenant ID 확인
+
+📌 API Password 설정 방법:
+   위 'API 엔드포인트 설정' 화면에서 'API 비밀번호 설정' 클릭
+
+Tenant ID: your-tenant-id
+Username (이메일 주소): your-email@example.com
+API Password: your-api-password
+
+--- OAuth 인증 (필수) ---
+
+📌 User Access Key ID 발급 방법:
+   1. NHN Cloud 콘솔 (https://console.nhncloud.com) 로그인
+   2. 오른쪽 상단의 이메일 주소 클릭
+   3. 'API 보안 설정' 메뉴 선택
+   4. 'User Access Key ID 생성' 버튼 클릭
+
 User Access Key ID: your-access-key-id
 Secret Access Key: your-secret-access-key
 
 === 리전 설정 ===
+
+사용 가능한 리전:
+   KR1 - 한국 (판교) 리전
+   KR2 - 한국 (평촌) 리전
+   JP1 - 일본 (도쿄) 리전
+
 기본 리전 [KR1]: KR1
 
 ✅ 프로필 'default' 설정이 저장되었습니다.
-```
 
----
-
-## Identity 인증 설정
-
-### 1. Tenant ID 및 API 비밀번호 확인
-
-1. [NHN Cloud 콘솔](https://console.nhncloud.com) 로그인
-2. **Compute > Instance** 메뉴 이동
-3. **API 엔드포인트 설정** 버튼 클릭
-4. **Tenant ID** 확인
-5. **API 비밀번호** 설정 (미설정 시 새로 생성)
-
-### 2. CLI 설정
-
-```bash
-nhn configure
-```
-
-```
-프로필 이름 [default]:
-=== 인증 방식 선택 ===
-1. OAuth 인증 (User Access Key ID) - 권장
-2. Identity 인증 (Tenant ID + Username)
-선택 [1]: 2
-
-=== Identity 인증 설정 ===
-Tenant ID: your-tenant-id
-Username (NHN Cloud ID): your-email@example.com
-API Password: your-api-password
-
-=== 리전 설정 ===
-기본 리전 [KR1]: KR1
-
-✅ 프로필 'default' 설정이 저장되었습니다.
+🔐 Identity 인증 정보 검증 중...
+✅ Identity 인증 성공!
+   Tenant ID: your-tenant-id
+   토큰이 캐시되었습니다. (유효기간: 12시간)
+   OAuth 인증 정보도 저장되었습니다.
 ```
 
 ---
@@ -112,10 +122,10 @@ nhn configure list
 
 출력 예시:
 ```
-PROFILE     AUTH TYPE   REGION
-default     oauth       KR1
-dev         oauth       KR1
-prod        identity    KR2
+PROFILE     IDENTITY    OAUTH    REGION
+default     ✓           ✓        KR1
+dev         ✓           ✓        KR1
+prod        ✓           ✓        KR2
 ```
 
 ### 프로필 사용
@@ -164,21 +174,26 @@ NHN_REGION=KR2 nhn compute instance list
 {
   "profiles": {
     "default": {
-      "auth_type": "oauth",
+      "tenant_id": "your-tenant-id",
+      "username": "your-email@example.com",
+      "password": "your-api-password",
       "user_access_key_id": "your-access-key-id",
       "secret_access_key": "your-secret-access-key",
       "region": "KR1"
     },
     "prod": {
-      "auth_type": "identity",
       "tenant_id": "your-tenant-id",
       "username": "your-email@example.com",
       "password": "your-api-password",
+      "user_access_key_id": "your-access-key-id",
+      "secret_access_key": "your-secret-access-key",
       "region": "KR2"
     }
   }
 }
 ```
+
+> **참고**: Identity 인증(tenant_id, username, password)과 OAuth 인증(user_access_key_id, secret_access_key) 모두 필수입니다.
 
 ### ~/.nhn/credentials.json
 

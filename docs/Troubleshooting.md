@@ -54,27 +54,30 @@ Error: Tenant ID가 필요합니다.
 
 **해결:**
 
-1. **Identity 인증 사용 (권장):**
-   ```bash
-   nhn configure
-   # 인증 방식 선택: 2 (Identity)
-   ```
+`nhn configure` 명령으로 Identity 인증 정보를 포함하여 재설정하세요:
 
-2. **설정 파일에 tenant_id 직접 추가:**
-   ```bash
-   # ~/.nhn/config.json 편집
-   {
-     "profiles": {
-       "default": {
-         "auth_type": "oauth",
-         "user_access_key_id": "...",
-         "secret_access_key": "...",
-         "region": "KR1",
-         "tenant_id": "your-tenant-id"  // 추가
-       }
-     }
-   }
-   ```
+```bash
+nhn configure
+```
+
+설정 시 Identity 인증 정보(Tenant ID, Username, Password)와 OAuth 인증 정보 모두 입력해야 합니다.
+
+설정 완료 후 `~/.nhn/config.json`에 다음과 같이 저장됩니다:
+
+```json
+{
+  "profiles": {
+    "default": {
+      "tenant_id": "your-tenant-id",
+      "username": "your-email@example.com",
+      "password": "your-api-password",
+      "user_access_key_id": "your-access-key-id",
+      "secret_access_key": "your-secret-access-key",
+      "region": "KR1"
+    }
+  }
+}
+```
 
 ---
 
@@ -319,11 +322,13 @@ nhn --debug vpc list 2>&1 | tee debug.log
 
 ## 자주 묻는 질문 (FAQ)
 
-### Q: OAuth와 Identity 중 어떤 인증을 사용해야 하나요?
+### Q: OAuth와 Identity 인증 모두 필요한가요?
 
-**A:** OAuth 인증을 권장합니다.
-- OAuth: 보안성이 높고, API 키 회전이 쉬움
-- Identity: 설정이 간단하지만, 비밀번호 관리 필요
+**A:** 네, 두 인증 모두 필수입니다.
+- Identity 인증: VPC, Compute 등 OpenStack 기반 API 호출에 필요
+- OAuth 인증: 기타 NHN Cloud API 호출에 필요
+
+`nhn configure` 명령 실행 시 두 인증 정보를 순차적으로 입력합니다.
 
 ### Q: 여러 프로젝트를 관리하려면?
 
