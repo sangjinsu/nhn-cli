@@ -117,7 +117,6 @@ type FlavorResponse struct {
 	Flavor Flavor `json:"flavor"`
 }
 
-
 type Keypair struct {
 	Name        string `json:"name"`
 	PublicKey   string `json:"public_key"`
