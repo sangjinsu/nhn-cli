@@ -114,6 +114,13 @@ NHN Cloud CLI는 NHN Cloud 서비스를 명령줄에서 관리할 수 있는 도
 | 오브젝트 삭제 | `nhn objectstorage object delete <object> --container <name>` |
 | 오브젝트 메타데이터 조회 | `nhn objectstorage object describe <object> --container <name>` |
 
+### Deploy
+
+| 기능 | 명령어 |
+|------|--------|
+| 배포 실행 | `nhn deploy execute` |
+| 바이너리 업로드 | `nhn deploy upload` |
+
 ---
 
 ## 설치

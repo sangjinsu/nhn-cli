@@ -132,6 +132,7 @@ a1b2c3d4-...                            web-server  ACTIVE  m2.c1m2     192.168.
 | 기능 | 명령어 |
 |------|--------|
 | 배포 실행 | `nhn deploy execute` |
+| 바이너리 업로드 | `nhn deploy upload` |
 
 ### CDN
 
@@ -744,6 +745,24 @@ nhn deploy execute \
   --server-group-id <id> \
   --artifact-id <id> \
   --async
+
+# 바이너리 업로드
+nhn deploy upload \
+  --artifact-id <id> \
+  --binary-group-key <key> \
+  --type server \
+  --file ./app.jar \
+  --version "1.0.0" \
+  --description "릴리즈"
+
+# client 타입 바이너리 업로드 (iOS)
+nhn deploy upload \
+  --artifact-id <id> \
+  --binary-group-key <key> \
+  --type client \
+  --file ./app.ipa \
+  --os-type iOS \
+  --meta-file ./app.plist
 ```
 
 > **참고**: Deploy AppKey가 필요합니다. `nhn configure service deploy`로 설정하거나 `--app-key` 플래그를 사용하세요.

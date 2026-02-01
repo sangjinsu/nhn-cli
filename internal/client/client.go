@@ -74,6 +74,10 @@ func (c *HTTPClient) Do(method, url string, body interface{}, opts *RequestOptio
 	return resp, nil
 }
 
+func (c *HTTPClient) GetRawClient() *http.Client {
+	return c.client
+}
+
 func (c *HTTPClient) Get(url string, opts *RequestOption) (*http.Response, error) {
 	return c.Do(http.MethodGet, url, nil, opts)
 }

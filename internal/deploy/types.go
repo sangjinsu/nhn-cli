@@ -23,3 +23,25 @@ type ResponseHeader struct {
 	ResultCode    int    `json:"resultCode"`
 	ResultMessage string `json:"resultMessage"`
 }
+
+type BinaryUploadRequest struct {
+	ArtifactID      int
+	BinaryGroupKey  int
+	ApplicationType string // "client" or "server"
+	BinaryFile      string // 파일 경로
+	Version         string
+	Description     string
+	OsType          string
+	MetaFile        string // plist 파일 경로
+	Fix             bool
+}
+
+type BinaryUploadResponse struct {
+	Header ResponseHeader `json:"header"`
+	Body   *BinaryResult  `json:"body,omitempty"`
+}
+
+type BinaryResult struct {
+	DownloadUrl string `json:"downloadUrl"`
+	BinaryKey   string `json:"binaryKey"`
+}
