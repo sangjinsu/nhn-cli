@@ -51,7 +51,10 @@ func init() {
 }
 
 func runMemberDescribe(c *cobra.Command, args []string) error {
-	gbClient, err := gb.NewClient(cmd.GetProfile(), cmd.GetDebug())
+	appKey, _ := c.Flags().GetString("app-key")
+	secretKey, _ := c.Flags().GetString("secret-key")
+	opts := gb.ClientOption{AppKey: appKey, SecretKey: secretKey}
+	gbClient, err := gb.NewClient(cmd.GetProfile(), cmd.GetDebug(), opts)
 	if err != nil {
 		return err
 	}
@@ -76,7 +79,10 @@ func runMemberDescribe(c *cobra.Command, args []string) error {
 }
 
 func runMemberList(c *cobra.Command, args []string) error {
-	gbClient, err := gb.NewClient(cmd.GetProfile(), cmd.GetDebug())
+	appKey, _ := c.Flags().GetString("app-key")
+	secretKey, _ := c.Flags().GetString("secret-key")
+	opts := gb.ClientOption{AppKey: appKey, SecretKey: secretKey}
+	gbClient, err := gb.NewClient(cmd.GetProfile(), cmd.GetDebug(), opts)
 	if err != nil {
 		return err
 	}
@@ -108,7 +114,10 @@ func runMemberList(c *cobra.Command, args []string) error {
 }
 
 func runMemberWithdraw(c *cobra.Command, args []string) error {
-	gbClient, err := gb.NewClient(cmd.GetProfile(), cmd.GetDebug())
+	appKey, _ := c.Flags().GetString("app-key")
+	secretKey, _ := c.Flags().GetString("secret-key")
+	opts := gb.ClientOption{AppKey: appKey, SecretKey: secretKey}
+	gbClient, err := gb.NewClient(cmd.GetProfile(), cmd.GetDebug(), opts)
 	if err != nil {
 		return err
 	}

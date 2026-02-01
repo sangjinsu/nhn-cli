@@ -25,12 +25,15 @@ var executeCmd = &cobra.Command{
 func init() {
 	cmd.GetRootCmd().AddCommand(PipelineCmd)
 	PipelineCmd.AddCommand(executeCmd)
+	PipelineCmd.PersistentFlags().String("app-key", "", "Pipeline AppKey (프로필 설정 오버라이드)")
 }
 
 func runExecute(c *cobra.Command, args []string) error {
 	pipelineName := args[0]
 
-	pipelineClient, err := pipeline.NewClient(cmd.GetProfile(), cmd.GetDebug())
+	appKey, _ := c.Flags().GetString("app-key")
+	opts := pipeline.ClientOption{AppKey: appKey}
+	pipelineClient, err := pipeline.NewClient(cmd.GetProfile(), cmd.GetDebug(), opts)
 	if err != nil {
 		return err
 	}

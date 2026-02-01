@@ -16,6 +16,13 @@ AWS CLI 스타일의 NHN Cloud 명령줄 인터페이스입니다.
   - [Compute 명령어](#compute-명령어)
   - [Block Storage 명령어](#block-storage-명령어)
   - [Load Balancer 명령어](#load-balancer-명령어)
+  - [DNS Plus 명령어](#dns-plus-명령어)
+  - [Object Storage 명령어](#object-storage-명령어)
+  - [Pipeline 명령어](#pipeline-명령어)
+  - [Deploy 명령어](#deploy-명령어)
+  - [CDN 명령어](#cdn-명령어)
+  - [AppGuard 명령어](#appguard-명령어)
+  - [Gamebase 명령어](#gamebase-명령어)
 - [전역 옵션](#-전역-옵션)
 - [실전 예제](#-실전-예제)
 - [설정 파일](#-설정-파일)
@@ -54,6 +61,8 @@ a1b2c3d4-...                            web-server  ACTIVE  m2.c1m2     192.168.
 | **OAuth 인증** | User Access Key ID + Secret Access Key (필수) |
 | **토큰 캐싱** | 자동 토큰 갱신 및 캐싱 |
 | **다중 프로필** | 여러 계정/환경 프로필 관리 |
+| **서비스별 AppKey 설정** | `nhn configure service <name>` (dns, pipeline, deploy, cdn, appguard, gamebase) |
+| **서비스별 AppKey 오버라이드** | `--app-key` / `--secret-key` 플래그로 프로필 설정 오버라이드 |
 
 > **참고**: Identity와 OAuth 인증 모두 필수입니다. 각 인증 방식은 다른 API에 사용됩니다.
 
@@ -95,6 +104,57 @@ a1b2c3d4-...                            web-server  ACTIVE  m2.c1m2     192.168.
 | 리스너 관리 | `nhn loadbalancer listener list/describe/create/delete` |
 
 > **참고**: `loadbalancer`는 `lb`로 축약하여 사용할 수 있습니다. (예: `nhn lb list`)
+
+### DNS Plus
+
+| 기능 | 명령어 |
+|------|--------|
+| Zone 관리 | `nhn dns zone list/describe/create/update/delete` |
+| Record Set 관리 | `nhn dns recordset list/describe/create/update/delete` |
+
+### Object Storage
+
+| 기능 | 명령어 |
+|------|--------|
+| 컨테이너 관리 | `nhn objectstorage container list/describe/create/delete` |
+| 오브젝트 관리 | `nhn objectstorage object list/upload/download/describe/delete` |
+
+> **참고**: `objectstorage`는 `os`로 축약하여 사용할 수 있습니다. (예: `nhn os container list`)
+
+### Pipeline
+
+| 기능 | 명령어 |
+|------|--------|
+| 파이프라인 실행 | `nhn pipeline execute [pipeline-name]` |
+
+### Deploy
+
+| 기능 | 명령어 |
+|------|--------|
+| 배포 실행 | `nhn deploy execute` |
+
+### CDN
+
+| 기능 | 명령어 |
+|------|--------|
+| CDN 서비스 관리 | `nhn cdn service list/create/update/delete` |
+| 캐시 퍼지 | `nhn cdn purge [domain]` |
+| 인증 토큰 생성 | `nhn cdn auth-token create` |
+
+### AppGuard
+
+| 기능 | 명령어 |
+|------|--------|
+| 탐지 현황 조회 | `nhn appguard dashboard` |
+
+### Gamebase
+
+| 기능 | 명령어 |
+|------|--------|
+| 회원 관리 | `nhn gamebase member list/describe/withdraw` |
+| 이용 정지 관리 | `nhn gamebase ban list/create/release` |
+| 론칭 상태 조회 | `nhn gamebase launching` |
+| 인증 토큰 검증 | `nhn gamebase auth validate` |
 
 ---
 
@@ -218,6 +278,20 @@ nhn configure --profile production
 
 # 특정 프로필 사용
 nhn --profile production vpc list
+```
+
+### 서비스별 AppKey 설정
+
+AppKey가 필요한 서비스는 별도로 설정합니다:
+
+```bash
+# DNS Plus AppKey 설정
+nhn configure service dns
+
+# CDN AppKey + Secret Key 설정
+nhn configure service cdn
+
+# 지원 서비스: dns, pipeline, deploy, cdn, appguard, gamebase
 ```
 
 ---
@@ -556,6 +630,221 @@ nhn lb listener delete <listener-id>
 
 ---
 
+### DNS Plus 명령어
+
+#### Zone 관리
+
+```bash
+# Zone 목록 조회
+nhn dns zone list
+
+# Zone 상세 조회
+nhn dns zone describe <zone-id>
+
+# Zone 생성
+nhn dns zone create --name example.com. --description "My Zone"
+
+# Zone 수정
+nhn dns zone update <zone-id> --description "Updated description"
+
+# Zone 삭제
+nhn dns zone delete <zone-id>
+```
+
+#### Record Set 관리
+
+```bash
+# Record Set 목록 조회
+nhn dns recordset list --zone-id <zone-id>
+
+# Record Set 상세 조회
+nhn dns recordset describe <recordset-id> --zone-id <zone-id>
+
+# A 레코드 생성
+nhn dns recordset create --zone-id <zone-id> \
+  --name www.example.com. \
+  --type A \
+  --ttl 300 \
+  --data 1.2.3.4
+
+# Record Set 수정
+nhn dns recordset update <recordset-id> --zone-id <zone-id> \
+  --ttl 600 --data 1.2.3.4
+
+# Record Set 삭제
+nhn dns recordset delete <recordset-id> --zone-id <zone-id>
+```
+
+---
+
+### Object Storage 명령어
+
+#### 컨테이너 관리
+
+```bash
+# 컨테이너 목록 조회
+nhn os container list
+
+# 컨테이너 메타데이터 조회
+nhn os container describe <container-name>
+
+# 컨테이너 생성
+nhn os container create my-container
+
+# 컨테이너 삭제
+nhn os container delete my-container
+```
+
+#### 오브젝트 관리
+
+```bash
+# 오브젝트 목록 조회
+nhn os object list --container my-container
+
+# 파일 업로드
+nhn os object upload --container my-container --file ./test.txt
+
+# 커스텀 이름으로 업로드
+nhn os object upload --container my-container --file ./test.txt --name custom-name.txt
+
+# 오브젝트 다운로드
+nhn os object download test.txt --container my-container
+
+# 오브젝트 메타데이터 조회
+nhn os object describe test.txt --container my-container
+
+# 오브젝트 삭제
+nhn os object delete test.txt --container my-container
+```
+
+---
+
+### Pipeline 명령어
+
+```bash
+# 파이프라인 수동 실행
+nhn pipeline execute <pipeline-name>
+```
+
+> **참고**: Pipeline AppKey가 필요합니다. `nhn configure service pipeline`로 설정하거나 `--app-key` 플래그를 사용하세요.
+
+---
+
+### Deploy 명령어
+
+```bash
+# 배포 실행
+nhn deploy execute \
+  --server-group-id <id> \
+  --artifact-id <id> \
+  --deploy-note "배포 메모"
+
+# 비동기 실행
+nhn deploy execute \
+  --server-group-id <id> \
+  --artifact-id <id> \
+  --async
+```
+
+> **참고**: Deploy AppKey가 필요합니다. `nhn configure service deploy`로 설정하거나 `--app-key` 플래그를 사용하세요.
+
+---
+
+### CDN 명령어
+
+#### CDN 서비스 관리
+
+```bash
+# CDN 서비스 목록 조회
+nhn cdn service list
+
+# CDN 서비스 생성
+nhn cdn service create
+
+# CDN 서비스 수정
+nhn cdn service update
+
+# CDN 서비스 삭제
+nhn cdn service delete
+```
+
+#### 캐시 퍼지
+
+```bash
+# 전체 퍼지
+nhn cdn purge <domain> --type ALL
+
+# 특정 경로 퍼지
+nhn cdn purge <domain> --type ITEM --items "/path1,/path2"
+```
+
+#### 인증 토큰
+
+```bash
+# 인증 토큰 생성
+nhn cdn auth-token create
+```
+
+> **참고**: CDN AppKey와 Secret Key가 필요합니다. `nhn configure service cdn`으로 설정하거나 `--app-key`, `--secret-key` 플래그를 사용하세요.
+
+---
+
+### AppGuard 명령어
+
+```bash
+# 비정상 행위 탐지 현황 조회
+nhn appguard dashboard --target-date 2025-01-01
+
+# iOS 탐지 현황
+nhn appguard dashboard --target-date 2025-01-01 --os 2
+```
+
+> **참고**: AppGuard AppKey가 필요합니다. `nhn configure service appguard`로 설정하거나 `--app-key` 플래그를 사용하세요.
+
+---
+
+### Gamebase 명령어
+
+#### 회원 관리
+
+```bash
+# 회원 조회
+nhn gamebase member describe <user-id>
+
+# 회원 일괄 조회
+nhn gamebase member list
+
+# 회원 탈퇴
+nhn gamebase member withdraw <user-id>
+```
+
+#### 이용 정지 관리
+
+```bash
+# 이용 정지 목록 조회
+nhn gamebase ban list
+
+# 이용 정지
+nhn gamebase ban create
+
+# 이용 정지 해제
+nhn gamebase ban release
+```
+
+#### 론칭 상태 및 인증
+
+```bash
+# 론칭 상태 조회
+nhn gamebase launching
+
+# 인증 토큰 검증
+nhn gamebase auth validate
+```
+
+> **참고**: Gamebase App ID와 Secret Key가 필요합니다. `nhn configure service gamebase`로 설정하거나 `--app-key`, `--secret-key` 플래그를 사용하세요.
+
+---
+
 ## 🔧 전역 옵션
 
 모든 명령어에서 사용 가능한 옵션:
@@ -579,6 +868,26 @@ nhn --output json vpc list
 
 # 디버그 모드로 실행 (HTTP 요청/응답 출력)
 nhn --debug vpc list
+```
+
+### 서비스별 옵션
+
+AppKey가 필요한 서비스(dns, pipeline, deploy, cdn, appguard, gamebase)에서 사용 가능:
+
+| 옵션 | 설명 | 대상 서비스 |
+|------|------|-------------|
+| `--app-key <key>` | 서비스 AppKey (프로필 설정 오버라이드) | 모든 AppKey 서비스 |
+| `--secret-key <key>` | Secret Key (프로필 설정 오버라이드) | cdn, gamebase |
+
+```bash
+# 프로필 대신 플래그로 AppKey 지정
+nhn dns zone list --app-key my-dns-appkey
+
+# CDN은 AppKey + SecretKey 모두 지정 가능
+nhn cdn service list --app-key my-cdn-appkey --secret-key my-secret
+
+# Gamebase도 AppKey(App ID) + SecretKey 지정 가능
+nhn gamebase member describe user123 --app-key my-app-id --secret-key my-secret
 ```
 
 ---
@@ -759,33 +1068,25 @@ nhn --output json compute instance list | \
 ## 🏗 아키텍처
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                         NHN Cloud CLI                           │
-├─────────────────────────────────────────────────────────────────┤
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────────────┐ │
-│  │configure │  │  vpc   │  │compute │  │blockstorage│  │loadbalancer│ │
-│  └────┬─────┘  └───┬───┘  └───┬────┘  └─────┬──────┘  └─────┬──────┘ │
-│       │            │          │              │               │        │
-│  ┌────▼────────────▼──────────▼──────────────▼───────────────▼──────┐ │
-│  │                    Internal Modules                               │ │
-│  │  ┌───────┐ ┌──────┐ ┌─────┐ ┌───────┐ ┌────────────┐ ┌────────┐ │ │
-│  │  │config │ │ auth │ │ vpc │ │compute│ │blockstorage│ │  lb    │ │ │
-│  │  └───┬───┘ └──┬───┘ └──┬──┘ └───┬───┘ └─────┬──────┘ └───┬────┘ │ │
-│  └───────┼────────────┼────────────┼───────────┼──────────────┼─────────┘ │
-│          │            │            │           │              │           │
-│  ┌───────▼────────────▼────────────▼───────────▼──────────────▼─────────┐ │
-│  │                     HTTP Client                             │ │
-│  └─────────────────────────┬───────────────────────────────────┘ │
-└────────────────────────────┼────────────────────────────────────┘
-                             │
-                             ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                      NHN Cloud APIs                             │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────────────┐ │
-│  │ OAuth │ │Identity│ │  VPC  │ │Compute│ │BlockStorage│ │   LB   │ │
-│  │  API  │ │  API   │ │  API  │ │  API  │ │    API     │ │  API   │ │
-│  └───────┘ └────────┘ └───────┘ └───────┘ └────────────┘ └────────┘ │
-└─────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                              NHN Cloud CLI                                    │
+├──────────────────────────────────────────────────────────────────────────────┤
+│  configure │ vpc │ compute │ blockstorage │ lb │ dns │ objectstorage         │
+│  pipeline  │ deploy │ cdn │ appguard │ gamebase                              │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                          Internal Modules                                     │
+│  config │ auth │ vpc │ compute │ blockstorage │ lb │ dns │ objectstorage     │
+│  pipeline │ deploy │ cdn │ appguard │ gamebase │ output                      │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                           HTTP Client                                         │
+└──────────────────────────┬───────────────────────────────────────────────────┘
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                           NHN Cloud APIs                                      │
+│  OAuth │ Identity │ VPC │ Compute │ BlockStorage │ LB │ DNS Plus             │
+│  ObjectStorage │ Pipeline │ Deploy │ CDN │ AppGuard │ Gamebase               │
+└──────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### 디렉토리 구조
@@ -821,9 +1122,16 @@ nhncli/
 │   │   ├── volume.go          # nhn blockstorage volume *
 │   │   ├── snapshot.go        # nhn blockstorage snapshot *
 │   │   └── type.go            # nhn blockstorage type *
-│   └── loadbalancer/
-│       ├── loadbalancer.go    # nhn loadbalancer (lb)
-│       └── listener.go        # nhn loadbalancer listener *
+│   ├── loadbalancer/
+│   │   ├── loadbalancer.go    # nhn loadbalancer (lb)
+│   │   └── listener.go        # nhn loadbalancer listener *
+│   ├── dns/                  # nhn dns *
+│   ├── objectstorage/        # nhn objectstorage (os) *
+│   ├── pipeline/             # nhn pipeline *
+│   ├── deploy/               # nhn deploy *
+│   ├── cdn/                  # nhn cdn *
+│   ├── appguard/             # nhn appguard *
+│   └── gamebase/             # nhn gamebase *
 └── internal/
     ├── config/
     │   ├── config.go          # 설정 로드/저장
@@ -864,6 +1172,13 @@ nhncli/
     │   ├── types.go           # Load Balancer 타입 정의
     │   ├── lb.go              # 로드 밸런서 CRUD
     │   └── listener.go        # 리스너 CRUD
+    ├── dns/                  # DNS Plus API 클라이언트
+    ├── objectstorage/        # Object Storage API 클라이언트
+    ├── pipeline/             # Pipeline API 클라이언트
+    ├── deploy/               # Deploy API 클라이언트
+    ├── cdn/                  # CDN API 클라이언트
+    ├── appguard/             # AppGuard API 클라이언트
+    ├── gamebase/             # Gamebase API 클라이언트
     └── output/
         └── output.go          # 출력 포매터 (table, json)
 ```
@@ -912,6 +1227,22 @@ Load Balancer API는 VPC API와 동일한 네트워크 엔드포인트를 사용
 | KR1 (판교) | `https://kr1-api-network-infrastructure.nhncloudservice.com` |
 | KR2 (평촌) | `https://kr2-api-network-infrastructure.nhncloudservice.com` |
 | JP1 (도쿄) | `https://jp1-api-network-infrastructure.nhncloudservice.com` |
+
+### DNS Plus API
+
+DNS Plus는 글로벌 서비스로 리전 구분 없이 단일 엔드포인트를 사용합니다.
+
+| 엔드포인트 |
+|-----------|
+| `https://dnsplus.api.nhncloudservice.com` |
+
+### Object Storage API
+
+| 리전 | 엔드포인트 |
+|------|-----------|
+| KR1 (판교) | `https://kr1-api-object-storage.nhncloudservice.com` |
+| KR2 (평촌) | `https://kr2-api-object-storage.nhncloudservice.com` |
+| JP1 (도쿄) | `https://jp1-api-object-storage.nhncloudservice.com` |
 
 ### 리전 정보
 
@@ -988,9 +1319,14 @@ PolyForm Noncommercial License 1.0.0
 
 - [x] Block Storage 관리
 - [x] Load Balancer 관리
-- [ ] Object Storage 관리
+- [x] Object Storage 관리
+- [x] DNS 관리
+- [x] Pipeline 관리
+- [x] Deploy 관리
+- [x] CDN 관리
+- [x] AppGuard 관리
+- [x] Gamebase 관리
 - [ ] Auto Scale 관리
-- [ ] DNS 관리
 - [ ] 자동완성 지원 (bash, zsh, fish)
 - [ ] 설정 파일 암호화
 - [ ] 대화형 모드

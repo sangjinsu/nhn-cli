@@ -18,6 +18,7 @@ var DnsCmd = &cobra.Command{
 
 func init() {
 	cmd.GetRootCmd().AddCommand(DnsCmd)
+	DnsCmd.PersistentFlags().String("app-key", "", "DNS AppKey (프로필 설정 오버라이드)")
 }
 
 func GetProfile() string {
@@ -30,4 +31,9 @@ func GetOutput() string {
 
 func GetDebug() bool {
 	return cmd.GetDebug()
+}
+
+func GetAppKey(c *cobra.Command) string {
+	v, _ := c.Flags().GetString("app-key")
+	return v
 }

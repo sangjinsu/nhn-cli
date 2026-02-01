@@ -13,7 +13,12 @@ type Client struct {
 	debug      bool
 }
 
-func NewClient(profileName string, debug bool) (*Client, error) {
+type ClientOption struct {
+	AppKey    string
+	SecretKey string
+}
+
+func NewClient(profileName string, debug bool, opts ...ClientOption) (*Client, error) {
 	cfg, err := config.Load()
 	if err != nil {
 		return nil, err
@@ -24,11 +29,16 @@ func NewClient(profileName string, debug bool) (*Client, error) {
 		return nil, err
 	}
 
-	if profile.AppKey == "" {
+	appKey := profile.AppKey
+	if len(opts) > 0 && opts[0].AppKey != "" {
+		appKey = opts[0].AppKey
+	}
+
+	if appKey == "" {
 		return nil, fmt.Errorf("DNS AppKey가 설정되지 않았습니다. 'nhn configure'로 AppKey를 설정하세요")
 	}
 
-	baseURL := fmt.Sprintf("https://dnsplus.api.nhncloudservice.com/dnsplus/v1.0/appkeys/%s", profile.AppKey)
+	baseURL := fmt.Sprintf("https://dnsplus.api.nhncloudservice.com/dnsplus/v1.0/appkeys/%s", appKey)
 
 	return &Client{
 		httpClient: client.NewHTTPClient(debug),

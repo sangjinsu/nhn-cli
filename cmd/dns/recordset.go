@@ -90,7 +90,8 @@ func init() {
 }
 
 func runRecordSetList(cmd *cobra.Command, args []string) error {
-	c, err := dns.NewClient(GetProfile(), GetDebug())
+	opts := dns.ClientOption{AppKey: GetAppKey(cmd)}
+	c, err := dns.NewClient(GetProfile(), GetDebug(), opts)
 	if err != nil {
 		return err
 	}
@@ -128,7 +129,8 @@ func runRecordSetList(cmd *cobra.Command, args []string) error {
 }
 
 func runRecordSetDescribe(cmd *cobra.Command, args []string) error {
-	c, err := dns.NewClient(GetProfile(), GetDebug())
+	opts := dns.ClientOption{AppKey: GetAppKey(cmd)}
+	c, err := dns.NewClient(GetProfile(), GetDebug(), opts)
 	if err != nil {
 		return err
 	}
@@ -162,7 +164,8 @@ func runRecordSetDescribe(cmd *cobra.Command, args []string) error {
 }
 
 func runRecordSetCreate(cmd *cobra.Command, args []string) error {
-	c, err := dns.NewClient(GetProfile(), GetDebug())
+	opts := dns.ClientOption{AppKey: GetAppKey(cmd)}
+	c, err := dns.NewClient(GetProfile(), GetDebug(), opts)
 	if err != nil {
 		return err
 	}
@@ -191,7 +194,8 @@ func runRecordSetCreate(cmd *cobra.Command, args []string) error {
 }
 
 func runRecordSetUpdate(cmd *cobra.Command, args []string) error {
-	c, err := dns.NewClient(GetProfile(), GetDebug())
+	opts := dns.ClientOption{AppKey: GetAppKey(cmd)}
+	c, err := dns.NewClient(GetProfile(), GetDebug(), opts)
 	if err != nil {
 		return err
 	}
@@ -221,7 +225,8 @@ func runRecordSetUpdate(cmd *cobra.Command, args []string) error {
 }
 
 func runRecordSetDelete(cmd *cobra.Command, args []string) error {
-	c, err := dns.NewClient(GetProfile(), GetDebug())
+	opts := dns.ClientOption{AppKey: GetAppKey(cmd)}
+	c, err := dns.NewClient(GetProfile(), GetDebug(), opts)
 	if err != nil {
 		return err
 	}
@@ -235,7 +240,8 @@ func runRecordSetDelete(cmd *cobra.Command, args []string) error {
 }
 
 func completeZoneIDsForFlag(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-	c, err := dns.NewClient(GetProfile(), GetDebug())
+	opts := dns.ClientOption{AppKey: GetAppKey(cmd)}
+	c, err := dns.NewClient(GetProfile(), GetDebug(), opts)
 	if err != nil {
 		return nil, cobra.ShellCompDirectiveNoFileComp
 	}
@@ -257,7 +263,8 @@ func completeRecordSetIDs(cmd *cobra.Command, args []string, toComplete string) 
 	if rsZoneID == "" {
 		return nil, cobra.ShellCompDirectiveNoFileComp
 	}
-	c, err := dns.NewClient(GetProfile(), GetDebug())
+	opts := dns.ClientOption{AppKey: GetAppKey(cmd)}
+	c, err := dns.NewClient(GetProfile(), GetDebug(), opts)
 	if err != nil {
 		return nil, cobra.ShellCompDirectiveNoFileComp
 	}

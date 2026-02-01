@@ -72,7 +72,8 @@ func init() {
 }
 
 func runZoneList(cmd *cobra.Command, args []string) error {
-	c, err := dns.NewClient(GetProfile(), GetDebug())
+	opts := dns.ClientOption{AppKey: GetAppKey(cmd)}
+	c, err := dns.NewClient(GetProfile(), GetDebug(), opts)
 	if err != nil {
 		return err
 	}
@@ -105,7 +106,8 @@ func runZoneList(cmd *cobra.Command, args []string) error {
 }
 
 func runZoneDescribe(cmd *cobra.Command, args []string) error {
-	c, err := dns.NewClient(GetProfile(), GetDebug())
+	opts := dns.ClientOption{AppKey: GetAppKey(cmd)}
+	c, err := dns.NewClient(GetProfile(), GetDebug(), opts)
 	if err != nil {
 		return err
 	}
@@ -131,7 +133,8 @@ func runZoneDescribe(cmd *cobra.Command, args []string) error {
 }
 
 func runZoneCreate(cmd *cobra.Command, args []string) error {
-	c, err := dns.NewClient(GetProfile(), GetDebug())
+	opts := dns.ClientOption{AppKey: GetAppKey(cmd)}
+	c, err := dns.NewClient(GetProfile(), GetDebug(), opts)
 	if err != nil {
 		return err
 	}
@@ -153,7 +156,8 @@ func runZoneCreate(cmd *cobra.Command, args []string) error {
 }
 
 func runZoneUpdate(cmd *cobra.Command, args []string) error {
-	c, err := dns.NewClient(GetProfile(), GetDebug())
+	opts := dns.ClientOption{AppKey: GetAppKey(cmd)}
+	c, err := dns.NewClient(GetProfile(), GetDebug(), opts)
 	if err != nil {
 		return err
 	}
@@ -174,7 +178,8 @@ func runZoneUpdate(cmd *cobra.Command, args []string) error {
 }
 
 func runZoneDelete(cmd *cobra.Command, args []string) error {
-	c, err := dns.NewClient(GetProfile(), GetDebug())
+	opts := dns.ClientOption{AppKey: GetAppKey(cmd)}
+	c, err := dns.NewClient(GetProfile(), GetDebug(), opts)
 	if err != nil {
 		return err
 	}
@@ -191,7 +196,8 @@ func completeZoneIDs(cmd *cobra.Command, args []string, toComplete string) ([]st
 	if len(args) != 0 {
 		return nil, cobra.ShellCompDirectiveNoFileComp
 	}
-	c, err := dns.NewClient(GetProfile(), GetDebug())
+	opts := dns.ClientOption{AppKey: GetAppKey(cmd)}
+	c, err := dns.NewClient(GetProfile(), GetDebug(), opts)
 	if err != nil {
 		return nil, cobra.ShellCompDirectiveNoFileComp
 	}

@@ -16,6 +16,8 @@ NHN Cloud CLI는 NHN Cloud 서비스를 명령줄에서 관리할 수 있는 도
 | Identity 인증 | Tenant ID + Username + Password |
 | 토큰 캐싱 | 자동 토큰 갱신 및 캐싱 |
 | 다중 프로필 | 여러 계정/환경 프로필 관리 |
+| 서비스별 AppKey 설정 | `nhn configure service <name>` (dns, pipeline, deploy, cdn, appguard, gamebase) |
+| 서비스별 AppKey 오버라이드 | `--app-key` / `--secret-key` 플래그 (dns, pipeline, deploy, cdn, appguard, gamebase) |
 
 ### VPC (Virtual Private Cloud)
 
@@ -144,32 +146,21 @@ sudo mv nhn /usr/local/bin/
 nhn configure
 ```
 
-대화형 프롬프트에서 인증 방식을 선택합니다:
+대화형 프롬프트에서 Identity + OAuth 인증 정보를 순차적으로 입력합니다:
 
-**방식 1: OAuth 인증 (권장)**
 ```
-프로필 이름 [default]: 
-=== 인증 방식 선택 ===
-1. OAuth 인증 (User Access Key ID) - 권장
-2. Identity 인증 (Tenant ID + Username)
-선택 [1]: 1
+프로필 이름 [default]:
 
-=== OAuth 인증 설정 ===
+=== NHN Cloud 인증 설정 ===
+
+--- Identity 인증 (필수) ---
+Tenant ID: your-tenant-id
+Username (이메일 주소): your-email@example.com
+API Password: your-api-password
+
+--- OAuth 인증 (필수) ---
 User Access Key ID: your-access-key-id
 Secret Access Key: your-secret-access-key
-
-=== 리전 설정 ===
-기본 리전 [KR1]: KR1
-```
-
-**방식 2: Identity 인증**
-```
-선택 [1]: 2
-
-=== Identity 인증 설정 ===
-Tenant ID: your-tenant-id
-Username (NHN Cloud ID): your-email@example.com
-API Password: your-api-password
 
 === 리전 설정 ===
 기본 리전 [KR1]: KR1
@@ -183,6 +174,23 @@ nhn configure list
 
 # 특정 프로필로 설정
 nhn configure --profile production
+```
+
+### 서비스별 AppKey 설정
+
+AppKey가 필요한 서비스는 별도로 설정합니다:
+
+```bash
+nhn configure service dns        # DNS Plus AppKey
+nhn configure service cdn        # CDN AppKey + Secret Key
+nhn configure service pipeline   # Pipeline AppKey
+nhn configure service deploy     # Deploy AppKey
+nhn configure service appguard   # AppGuard AppKey
+nhn configure service gamebase   # Gamebase App ID + Secret Key
+
+# 또는 --app-key 플래그로 직접 지정
+nhn dns zone list --app-key <appkey>
+nhn cdn service list --app-key <appkey> --secret-key <secretkey>
 ```
 
 ---
@@ -204,6 +212,26 @@ nhn --profile production --region KR2 compute instance list
 
 # JSON 형식으로 출력
 nhn --output json vpc list
+```
+
+### 서비스별 옵션
+
+AppKey가 필요한 서비스(dns, pipeline, deploy, cdn, appguard, gamebase)에서 사용 가능:
+
+| 옵션 | 설명 | 대상 서비스 |
+|------|------|-------------|
+| `--app-key <key>` | 서비스 AppKey (프로필 설정 오버라이드) | 모든 AppKey 서비스 |
+| `--secret-key <key>` | Secret Key (프로필 설정 오버라이드) | cdn, gamebase |
+
+```bash
+# 프로필 대신 플래그로 AppKey 지정
+nhn dns zone list --app-key my-dns-appkey
+
+# CDN은 AppKey + SecretKey 모두 지정 가능
+nhn cdn service list --app-key my-cdn-appkey --secret-key my-secret
+
+# Gamebase도 AppKey(App ID) + SecretKey 지정 가능
+nhn gamebase member describe user123 --app-key my-app-id --secret-key my-secret
 ```
 
 ---
@@ -932,8 +960,13 @@ nhn --debug compute instance list
 - [x] Block Storage 관리
 - [x] Load Balancer 관리
 - [x] Object Storage 관리
-- [ ] Auto Scale 관리
 - [x] DNS 관리
+- [x] Pipeline 관리
+- [x] Deploy 관리
+- [x] CDN 관리
+- [x] AppGuard 관리
+- [x] Gamebase 관리
+- [ ] Auto Scale 관리
 - [ ] 자동완성 지원 (bash, zsh, fish)
 - [ ] 설정 파일 암호화
 - [ ] 병렬 처리 지원

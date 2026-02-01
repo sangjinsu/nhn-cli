@@ -33,6 +33,7 @@ var (
 func init() {
 	cmd.GetRootCmd().AddCommand(AppGuardCmd)
 	AppGuardCmd.AddCommand(dashboardCmd)
+	AppGuardCmd.PersistentFlags().String("app-key", "", "AppGuard AppKey (프로필 설정 오버라이드)")
 
 	dashboardCmd.Flags().StringVar(&targetDate, "target-date", "", "조회 날짜 (YYYY-MM-DD, 필수)")
 	dashboardCmd.Flags().IntVar(&osType, "os", 1, "OS 타입 (1: Android, 2: iOS)")
@@ -42,7 +43,9 @@ func init() {
 }
 
 func runDashboard(c *cobra.Command, args []string) error {
-	agClient, err := appguard.NewClient(cmd.GetProfile(), cmd.GetDebug())
+	appKey, _ := c.Flags().GetString("app-key")
+	opts := appguard.ClientOption{AppKey: appKey}
+	agClient, err := appguard.NewClient(cmd.GetProfile(), cmd.GetDebug(), opts)
 	if err != nil {
 		return err
 	}

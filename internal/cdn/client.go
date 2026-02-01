@@ -15,7 +15,12 @@ type Client struct {
 	debug      bool
 }
 
-func NewClient(profileName string, debug bool) (*Client, error) {
+type ClientOption struct {
+	AppKey    string
+	SecretKey string
+}
+
+func NewClient(profileName string, debug bool, opts ...ClientOption) (*Client, error) {
 	cfg, err := config.Load()
 	if err != nil {
 		return nil, err
@@ -26,21 +31,32 @@ func NewClient(profileName string, debug bool) (*Client, error) {
 		return nil, err
 	}
 
-	if profile.CDNAppKey == "" {
+	appKey := profile.CDNAppKey
+	secretKey := profile.CDNSecretKey
+	if len(opts) > 0 {
+		if opts[0].AppKey != "" {
+			appKey = opts[0].AppKey
+		}
+		if opts[0].SecretKey != "" {
+			secretKey = opts[0].SecretKey
+		}
+	}
+
+	if appKey == "" {
 		return nil, fmt.Errorf("CDN AppKey가 설정되지 않았습니다. 'nhn configure'로 설정하세요")
 	}
-	if profile.CDNSecretKey == "" {
+	if secretKey == "" {
 		return nil, fmt.Errorf("CDN Secret Key가 설정되지 않았습니다. 'nhn configure'로 설정하세요")
 	}
 
 	headers := map[string]string{
-		"Authorization": profile.CDNSecretKey,
+		"Authorization": secretKey,
 	}
 
 	return &Client{
 		httpClient: client.NewHTTPClient(debug),
 		baseURL:    "https://cdn.api.nhncloudservice.com",
-		appKey:     profile.CDNAppKey,
+		appKey:     appKey,
 		headers:    headers,
 		debug:      debug,
 	}, nil

@@ -68,7 +68,10 @@ func init() {
 }
 
 func runBanCreate(c *cobra.Command, args []string) error {
-	gbClient, err := gb.NewClient(cmd.GetProfile(), cmd.GetDebug())
+	appKey, _ := c.Flags().GetString("app-key")
+	secretKey, _ := c.Flags().GetString("secret-key")
+	opts := gb.ClientOption{AppKey: appKey, SecretKey: secretKey}
+	gbClient, err := gb.NewClient(cmd.GetProfile(), cmd.GetDebug(), opts)
 	if err != nil {
 		return err
 	}
@@ -91,7 +94,10 @@ func runBanCreate(c *cobra.Command, args []string) error {
 }
 
 func runBanList(c *cobra.Command, args []string) error {
-	gbClient, err := gb.NewClient(cmd.GetProfile(), cmd.GetDebug())
+	appKey, _ := c.Flags().GetString("app-key")
+	secretKey, _ := c.Flags().GetString("secret-key")
+	opts := gb.ClientOption{AppKey: appKey, SecretKey: secretKey}
+	gbClient, err := gb.NewClient(cmd.GetProfile(), cmd.GetDebug(), opts)
 	if err != nil {
 		return err
 	}
@@ -122,7 +128,10 @@ func runBanList(c *cobra.Command, args []string) error {
 }
 
 func runBanRelease(c *cobra.Command, args []string) error {
-	gbClient, err := gb.NewClient(cmd.GetProfile(), cmd.GetDebug())
+	appKey, _ := c.Flags().GetString("app-key")
+	secretKey, _ := c.Flags().GetString("secret-key")
+	opts := gb.ClientOption{AppKey: appKey, SecretKey: secretKey}
+	gbClient, err := gb.NewClient(cmd.GetProfile(), cmd.GetDebug(), opts)
 	if err != nil {
 		return err
 	}

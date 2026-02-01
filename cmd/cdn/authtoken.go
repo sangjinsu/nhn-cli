@@ -38,7 +38,10 @@ func init() {
 }
 
 func runAuthTokenCreate(c *cobra.Command, args []string) error {
-	cdnClient, err := cdn.NewClient(cmd.GetProfile(), cmd.GetDebug())
+	appKey, _ := c.Flags().GetString("app-key")
+	secretKey, _ := c.Flags().GetString("secret-key")
+	opts := cdn.ClientOption{AppKey: appKey, SecretKey: secretKey}
+	cdnClient, err := cdn.NewClient(cmd.GetProfile(), cmd.GetDebug(), opts)
 	if err != nil {
 		return err
 	}

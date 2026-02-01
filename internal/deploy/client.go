@@ -15,7 +15,12 @@ type Client struct {
 	debug      bool
 }
 
-func NewClient(profileName string, debug bool) (*Client, error) {
+type ClientOption struct {
+	AppKey    string
+	SecretKey string
+}
+
+func NewClient(profileName string, debug bool, opts ...ClientOption) (*Client, error) {
 	cfg, err := config.Load()
 	if err != nil {
 		return nil, err
@@ -26,7 +31,12 @@ func NewClient(profileName string, debug bool) (*Client, error) {
 		return nil, err
 	}
 
-	if profile.DeployAppKey == "" {
+	appKey := profile.DeployAppKey
+	if len(opts) > 0 && opts[0].AppKey != "" {
+		appKey = opts[0].AppKey
+	}
+
+	if appKey == "" {
 		return nil, fmt.Errorf("Deploy AppKey가 설정되지 않았습니다. 'nhn configure'로 설정하세요")
 	}
 	if profile.UserAccessKeyID == "" || profile.SecretAccessKey == "" {
@@ -41,7 +51,7 @@ func NewClient(profileName string, debug bool) (*Client, error) {
 	return &Client{
 		httpClient: client.NewHTTPClient(debug),
 		baseURL:    "https://api-tcd.nhncloudservice.com",
-		appKey:     profile.DeployAppKey,
+		appKey:     appKey,
 		headers:    headers,
 		debug:      debug,
 	}, nil

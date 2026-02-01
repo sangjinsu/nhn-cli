@@ -33,6 +33,7 @@ var (
 func init() {
 	cmd.GetRootCmd().AddCommand(DeployCmd)
 	DeployCmd.AddCommand(executeCmd)
+	DeployCmd.PersistentFlags().String("app-key", "", "Deploy AppKey (프로필 설정 오버라이드)")
 
 	executeCmd.Flags().IntVar(&artifactID, "artifact-id", 0, "아티팩트 ID (필수)")
 	executeCmd.Flags().IntVar(&serverGroupID, "server-group-id", 0, "서버 그룹 ID (필수)")
@@ -46,7 +47,9 @@ func init() {
 }
 
 func runExecute(c *cobra.Command, args []string) error {
-	deployClient, err := deploy.NewClient(cmd.GetProfile(), cmd.GetDebug())
+	appKey, _ := c.Flags().GetString("app-key")
+	opts := deploy.ClientOption{AppKey: appKey}
+	deployClient, err := deploy.NewClient(cmd.GetProfile(), cmd.GetDebug(), opts)
 	if err != nil {
 		return err
 	}

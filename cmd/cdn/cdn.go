@@ -19,4 +19,6 @@ var CDNCmd = &cobra.Command{
 
 func init() {
 	cmd.GetRootCmd().AddCommand(CDNCmd)
+	CDNCmd.PersistentFlags().String("app-key", "", "CDN AppKey (프로필 설정 오버라이드)")
+	CDNCmd.PersistentFlags().String("secret-key", "", "CDN Secret Key (프로필 설정 오버라이드)")
 }

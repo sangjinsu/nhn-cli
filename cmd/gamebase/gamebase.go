@@ -20,4 +20,6 @@ var GamebaseCmd = &cobra.Command{
 
 func init() {
 	cmd.GetRootCmd().AddCommand(GamebaseCmd)
+	GamebaseCmd.PersistentFlags().String("app-key", "", "Gamebase App ID (프로필 설정 오버라이드)")
+	GamebaseCmd.PersistentFlags().String("secret-key", "", "Gamebase Secret Key (프로필 설정 오버라이드)")
 }

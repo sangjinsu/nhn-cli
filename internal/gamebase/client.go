@@ -15,7 +15,12 @@ type Client struct {
 	debug      bool
 }
 
-func NewClient(profileName string, debug bool) (*Client, error) {
+type ClientOption struct {
+	AppKey    string
+	SecretKey string
+}
+
+func NewClient(profileName string, debug bool, opts ...ClientOption) (*Client, error) {
 	cfg, err := config.Load()
 	if err != nil {
 		return nil, err
@@ -26,21 +31,32 @@ func NewClient(profileName string, debug bool) (*Client, error) {
 		return nil, err
 	}
 
-	if profile.GamebaseAppID == "" {
+	appID := profile.GamebaseAppID
+	secretKey := profile.GamebaseSecretKey
+	if len(opts) > 0 {
+		if opts[0].AppKey != "" {
+			appID = opts[0].AppKey
+		}
+		if opts[0].SecretKey != "" {
+			secretKey = opts[0].SecretKey
+		}
+	}
+
+	if appID == "" {
 		return nil, fmt.Errorf("Gamebase App ID가 설정되지 않았습니다. 'nhn configure'로 설정하세요")
 	}
-	if profile.GamebaseSecretKey == "" {
+	if secretKey == "" {
 		return nil, fmt.Errorf("Gamebase Secret Key가 설정되지 않았습니다. 'nhn configure'로 설정하세요")
 	}
 
 	headers := map[string]string{
-		"X-Secret-Key": profile.GamebaseSecretKey,
+		"X-Secret-Key": secretKey,
 	}
 
 	return &Client{
 		httpClient: client.NewHTTPClient(debug),
 		baseURL:    "https://api-gamebase.nhncloudservice.com",
-		appID:      profile.GamebaseAppID,
+		appID:      appID,
 		headers:    headers,
 		debug:      debug,
 	}, nil

@@ -32,7 +32,10 @@ func init() {
 func runPurge(c *cobra.Command, args []string) error {
 	domain := args[0]
 
-	cdnClient, err := cdn.NewClient(cmd.GetProfile(), cmd.GetDebug())
+	appKey, _ := c.Flags().GetString("app-key")
+	secretKey, _ := c.Flags().GetString("secret-key")
+	opts := cdn.ClientOption{AppKey: appKey, SecretKey: secretKey}
+	cdnClient, err := cdn.NewClient(cmd.GetProfile(), cmd.GetDebug(), opts)
 	if err != nil {
 		return err
 	}

@@ -67,7 +67,10 @@ func init() {
 }
 
 func runServiceList(c *cobra.Command, args []string) error {
-	cdnClient, err := cdn.NewClient(cmd.GetProfile(), cmd.GetDebug())
+	appKey, _ := c.Flags().GetString("app-key")
+	secretKey, _ := c.Flags().GetString("secret-key")
+	opts := cdn.ClientOption{AppKey: appKey, SecretKey: secretKey}
+	cdnClient, err := cdn.NewClient(cmd.GetProfile(), cmd.GetDebug(), opts)
 	if err != nil {
 		return err
 	}
@@ -98,7 +101,10 @@ func runServiceList(c *cobra.Command, args []string) error {
 }
 
 func runServiceCreate(c *cobra.Command, args []string) error {
-	cdnClient, err := cdn.NewClient(cmd.GetProfile(), cmd.GetDebug())
+	appKey, _ := c.Flags().GetString("app-key")
+	secretKey, _ := c.Flags().GetString("secret-key")
+	opts := cdn.ClientOption{AppKey: appKey, SecretKey: secretKey}
+	cdnClient, err := cdn.NewClient(cmd.GetProfile(), cmd.GetDebug(), opts)
 	if err != nil {
 		return err
 	}
@@ -121,7 +127,10 @@ func runServiceCreate(c *cobra.Command, args []string) error {
 func runServiceUpdate(c *cobra.Command, args []string) error {
 	domain := args[0]
 
-	cdnClient, err := cdn.NewClient(cmd.GetProfile(), cmd.GetDebug())
+	appKey, _ := c.Flags().GetString("app-key")
+	secretKey, _ := c.Flags().GetString("secret-key")
+	opts := cdn.ClientOption{AppKey: appKey, SecretKey: secretKey}
+	cdnClient, err := cdn.NewClient(cmd.GetProfile(), cmd.GetDebug(), opts)
 	if err != nil {
 		return err
 	}
@@ -144,7 +153,10 @@ func runServiceUpdate(c *cobra.Command, args []string) error {
 func runServiceDelete(c *cobra.Command, args []string) error {
 	domain := args[0]
 
-	cdnClient, err := cdn.NewClient(cmd.GetProfile(), cmd.GetDebug())
+	appKey, _ := c.Flags().GetString("app-key")
+	secretKey, _ := c.Flags().GetString("secret-key")
+	opts := cdn.ClientOption{AppKey: appKey, SecretKey: secretKey}
+	cdnClient, err := cdn.NewClient(cmd.GetProfile(), cmd.GetDebug(), opts)
 	if err != nil {
 		return err
 	}

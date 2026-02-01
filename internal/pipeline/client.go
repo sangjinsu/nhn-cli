@@ -14,7 +14,12 @@ type Client struct {
 	debug      bool
 }
 
-func NewClient(profileName string, debug bool) (*Client, error) {
+type ClientOption struct {
+	AppKey    string
+	SecretKey string
+}
+
+func NewClient(profileName string, debug bool, opts ...ClientOption) (*Client, error) {
 	cfg, err := config.Load()
 	if err != nil {
 		return nil, err
@@ -25,7 +30,12 @@ func NewClient(profileName string, debug bool) (*Client, error) {
 		return nil, err
 	}
 
-	if profile.PipelineAppKey == "" {
+	appKey := profile.PipelineAppKey
+	if len(opts) > 0 && opts[0].AppKey != "" {
+		appKey = opts[0].AppKey
+	}
+
+	if appKey == "" {
 		return nil, fmt.Errorf("Pipeline AppKey가 설정되지 않았습니다. 'nhn configure'로 설정하세요")
 	}
 	if profile.UserAccessKeyID == "" || profile.SecretAccessKey == "" {
@@ -34,7 +44,7 @@ func NewClient(profileName string, debug bool) (*Client, error) {
 
 	headers := map[string]string{
 		"X-NHN-REGION":               profile.Region,
-		"X-NHN-APPKEY":               profile.PipelineAppKey,
+		"X-NHN-APPKEY":               appKey,
 		"X-TC-AUTHENTICATION-ID":     profile.UserAccessKeyID,
 		"X-TC-AUTHENTICATION-SECRET": profile.SecretAccessKey,
 	}
