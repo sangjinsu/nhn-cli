@@ -30,3 +30,9 @@ go.work.sum
 # Binary
 nhn
 
+# oh-my-claudecode
+.omc/
+
+# repomix
+repomix-output.xml
+
