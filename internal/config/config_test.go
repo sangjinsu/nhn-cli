@@ -3,15 +3,19 @@ package config
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
 )
 
+// setTestHome sets both HOME and USERPROFILE so os.UserHomeDir() works on all platforms.
+func setTestHome(t *testing.T, dir string) {
+	t.Setenv("HOME", dir)
+	t.Setenv("USERPROFILE", dir)
+}
+
 func TestLoadNonExistentConfig(t *testing.T) {
-	// Save and restore HOME
-	origHome := os.Getenv("HOME")
 	tmpDir := t.TempDir()
-	os.Setenv("HOME", tmpDir)
-	defer os.Setenv("HOME", origHome)
+	setTestHome(t, tmpDir)
 
 	cfg, err := Load()
 	if err != nil {
@@ -26,10 +30,8 @@ func TestLoadNonExistentConfig(t *testing.T) {
 }
 
 func TestSaveAndLoad(t *testing.T) {
-	origHome := os.Getenv("HOME")
 	tmpDir := t.TempDir()
-	os.Setenv("HOME", tmpDir)
-	defer os.Setenv("HOME", origHome)
+	setTestHome(t, tmpDir)
 
 	cfg := &Config{
 		Profiles: map[string]*ProfileConfig{
@@ -129,10 +131,8 @@ func TestListProfiles(t *testing.T) {
 }
 
 func TestConfigDirPermissions(t *testing.T) {
-	origHome := os.Getenv("HOME")
 	tmpDir := t.TempDir()
-	os.Setenv("HOME", tmpDir)
-	defer os.Setenv("HOME", origHome)
+	setTestHome(t, tmpDir)
 
 	if err := EnsureConfigDir(); err != nil {
 		t.Fatalf("EnsureConfigDir() error = %v", err)
@@ -146,9 +146,11 @@ func TestConfigDirPermissions(t *testing.T) {
 	if !info.IsDir() {
 		t.Error("config dir is not a directory")
 	}
-	// Check permissions (0700)
-	perm := info.Mode().Perm()
-	if perm != 0700 {
-		t.Errorf("config dir permissions = %o, want 0700", perm)
+	// Check permissions (0700) - only on Unix; Windows doesn't support Unix permissions
+	if runtime.GOOS != "windows" {
+		perm := info.Mode().Perm()
+		if perm != 0700 {
+			t.Errorf("config dir permissions = %o, want 0700", perm)
+		}
 	}
 }
