@@ -117,25 +117,6 @@ type FlavorResponse struct {
 	Flavor Flavor `json:"flavor"`
 }
 
-type Image struct {
-	ID       string            `json:"id"`
-	Name     string            `json:"name"`
-	Status   string            `json:"status"`
-	Created  time.Time         `json:"created"`
-	Updated  time.Time         `json:"updated"`
-	MinDisk  int               `json:"minDisk"`
-	MinRAM   int               `json:"minRam"`
-	Progress int               `json:"progress"`
-	Metadata map[string]string `json:"metadata"`
-}
-
-type ImageListResponse struct {
-	Images []Image `json:"images"`
-}
-
-type ImageResponse struct {
-	Image Image `json:"image"`
-}
 
 type Keypair struct {
 	Name        string `json:"name"`

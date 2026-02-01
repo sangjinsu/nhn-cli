@@ -1,4 +1,4 @@
-package compute
+package image
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 )
 
 func (c *Client) ListImages() ([]Image, error) {
-	resp, err := c.httpClient.Get(c.url("/images/detail"), c.getOpts())
+	resp, err := c.httpClient.Get(c.url("/images"), c.getOpts())
 	if err != nil {
 		return nil, err
 	}
@@ -26,10 +26,10 @@ func (c *Client) GetImage(id string) (*Image, error) {
 		return nil, err
 	}
 
-	var result ImageResponse
+	var result Image
 	if err := client.ReadJSON(resp, &result); err != nil {
 		return nil, fmt.Errorf("이미지 조회 실패: %w", err)
 	}
 
-	return &result.Image, nil
+	return &result, nil
 }
