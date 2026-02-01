@@ -46,6 +46,9 @@ func NewClient(profileName string, region string, debug bool) (*Client, error) {
 	if tenantID == "" {
 		tenantID = profile.TenantID
 	}
+	if tenantID == "" {
+		return nil, fmt.Errorf("Tenant ID가 설정되지 않았습니다. 'nhn configure'로 Identity 인증 정보를 설정하세요")
+	}
 
 	return &Client{
 		httpClient: client.NewHTTPClient(debug),

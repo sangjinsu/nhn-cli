@@ -181,7 +181,7 @@ func runVolumeCreate(cmd *cobra.Command, args []string) error {
 		return output.PrintJSON(vol)
 	}
 
-	fmt.Printf("볼륨이 생성되었습니다.\n")
+	fmt.Printf("✅ 볼륨이 생성되었습니다.\n")
 	fmt.Printf("Volume ID:  %s\n", vol.ID)
 	fmt.Printf("Name:       %s\n", vol.Name)
 	fmt.Printf("Size:       %d GB\n", vol.Size)
@@ -202,6 +202,6 @@ func runVolumeDelete(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	fmt.Printf("볼륨 %s가 삭제되었습니다.\n", volumeID)
+	fmt.Printf("✅ 볼륨 %s가 삭제되었습니다.\n", volumeID)
 	return nil
 }

@@ -11,17 +11,17 @@ NHN Cloud CLI의 시스템 아키텍처 및 설계 구조입니다.
 │                         NHN Cloud CLI                           │
 ├─────────────────────────────────────────────────────────────────┤
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────────────┐ │
-│  │configure │  │   vpc    │  │ compute  │  │  (future cmds)   │ │
-│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────────┬─────────┘ │
-│       │             │             │                  │          │
-│  ┌────▼─────────────▼─────────────▼──────────────────▼────────┐ │
-│  │                    Internal Modules                         │ │
-│  │  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────────────┐│ │
-│  │  │ config  │  │  auth   │  │   vpc   │  │    compute      ││ │
-│  │  └────┬────┘  └────┬────┘  └────┬────┘  └────────┬────────┘│ │
-│  └───────┼────────────┼────────────┼────────────────┼─────────┘ │
-│          │            │            │                │           │
-│  ┌───────▼────────────▼────────────▼────────────────▼─────────┐ │
+│  │configure │  │  vpc   │  │compute │  │blockstorage│  │loadbalancer│ │
+│  └────┬─────┘  └───┬───┘  └───┬────┘  └─────┬──────┘  └─────┬──────┘ │
+│       │            │          │              │               │        │
+│  ┌────▼────────────▼──────────▼──────────────▼───────────────▼──────┐ │
+│  │                    Internal Modules                               │ │
+│  │  ┌───────┐ ┌──────┐ ┌─────┐ ┌───────┐ ┌────────────┐ ┌────────┐ │ │
+│  │  │config │ │ auth │ │ vpc │ │compute│ │blockstorage│ │  lb    │ │ │
+│  │  └───┬───┘ └──┬───┘ └──┬──┘ └───┬───┘ └─────┬──────┘ └───┬────┘ │ │
+│  └───────┼────────────┼────────────┼───────────┼──────────────┼─────────┘ │
+│          │            │            │           │              │           │
+│  ┌───────▼────────────▼────────────▼───────────▼──────────────▼─────────┐ │
 │  │                     HTTP Client                             │ │
 │  └─────────────────────────┬───────────────────────────────────┘ │
 └────────────────────────────┼────────────────────────────────────┘
@@ -30,9 +30,9 @@ NHN Cloud CLI의 시스템 아키텍처 및 설계 구조입니다.
 ┌─────────────────────────────────────────────────────────────────┐
 │                      NHN Cloud APIs                             │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────────────┐ │
-│  │  OAuth   │  │ Identity │  │   VPC    │  │     Compute      │ │
-│  │   API    │  │   API    │  │   API    │  │       API        │ │
-│  └──────────┘  └──────────┘  └──────────┘  └──────────────────┘ │
+│  │ OAuth │ │Identity│ │  VPC  │ │Compute│ │BlockStorage│ │   LB   │ │
+│  │  API  │ │  API   │ │  API  │ │  API  │ │    API     │ │  API   │ │
+│  └───────┘ └────────┘ └───────┘ └───────┘ └────────────┘ └────────┘ │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -56,6 +56,8 @@ NHN Cloud CLI의 시스템 아키텍처 및 설계 구조입니다.
 - **auth**: 인증 및 토큰 관리
 - **vpc**: VPC API 클라이언트
 - **compute**: Compute API 클라이언트
+- **blockstorage**: Block Storage API 클라이언트
+- **loadbalancer**: Load Balancer API 클라이언트
 - **client**: 공통 HTTP 클라이언트
 - **output**: 출력 포매터
 
@@ -92,13 +94,23 @@ nhncli/
 │   │   ├── routingtable.go    # nhn vpc routingtable *
 │   │   └── port.go            # nhn vpc port *
 │   │
-│   └── compute/               # Compute 명령어
-│       ├── compute.go         # nhn compute
-│       ├── instance.go        # nhn compute instance *
-│       ├── flavor.go          # nhn compute flavor *
-│       ├── image.go           # nhn compute image *
-│       ├── keypair.go         # nhn compute keypair *
-│       └── az.go              # nhn compute az *
+│   ├── compute/               # Compute 명령어
+│   │   ├── compute.go         # nhn compute
+│   │   ├── instance.go        # nhn compute instance *
+│   │   ├── flavor.go          # nhn compute flavor *
+│   │   ├── image.go           # nhn compute image *
+│   │   ├── keypair.go         # nhn compute keypair *
+│   │   └── az.go              # nhn compute az *
+│   │
+│   ├── blockstorage/          # Block Storage 명령어
+│   │   ├── blockstorage.go    # nhn blockstorage
+│   │   ├── volume.go          # nhn blockstorage volume *
+│   │   ├── snapshot.go        # nhn blockstorage snapshot *
+│   │   └── type.go            # nhn blockstorage type *
+│   │
+│   └── loadbalancer/          # Load Balancer 명령어
+│       ├── loadbalancer.go    # nhn loadbalancer (lb)
+│       └── listener.go        # nhn loadbalancer listener *
 │
 └── internal/                  # 내부 모듈
     ├── config/                # 설정 관리
@@ -134,6 +146,18 @@ nhncli/
     │   ├── image.go           # 이미지
     │   ├── keypair.go         # 키페어
     │   └── az.go              # 가용성 영역
+    │
+    ├── blockstorage/          # Block Storage API
+    │   ├── client.go          # Block Storage API 클라이언트
+    │   ├── types.go           # Block Storage 타입 정의
+    │   ├── volume.go          # 볼륨 CRUD
+    │   └── snapshot.go        # 스냅샷 CRUD
+    │
+    ├── loadbalancer/          # Load Balancer API
+    │   ├── client.go          # Load Balancer API 클라이언트
+    │   ├── types.go           # Load Balancer 타입 정의
+    │   ├── lb.go              # 로드 밸런서 CRUD
+    │   └── listener.go        # 리스너 CRUD
     │
     └── output/                # 출력 포매터
         └── output.go          # Table, JSON 포매터

@@ -325,6 +325,143 @@ X-Auth-Token: {token}
 
 ---
 
+## Block Storage API
+
+### 엔드포인트
+
+| 리전 | 엔드포인트 |
+|------|-----------|
+| KR1 (판교) | `https://kr1-api-block-storage-infrastructure.nhncloudservice.com` |
+| KR2 (평촌) | `https://kr2-api-block-storage-infrastructure.nhncloudservice.com` |
+| JP1 (도쿄) | `https://jp1-api-block-storage-infrastructure.nhncloudservice.com` |
+
+### 볼륨 작업
+
+| 작업 | Method | 경로 |
+|------|--------|------|
+| 볼륨 목록 | `GET` | `/v2/{tenantId}/volumes/detail` |
+| 볼륨 조회 | `GET` | `/v2/{tenantId}/volumes/{volumeId}` |
+| 볼륨 생성 | `POST` | `/v2/{tenantId}/volumes` |
+| 볼륨 삭제 | `DELETE` | `/v2/{tenantId}/volumes/{volumeId}` |
+
+#### 볼륨 생성 요청
+
+```http
+POST /v2/{tenantId}/volumes
+Content-Type: application/json
+X-Auth-Token: {token}
+
+{
+  "volume": {
+    "name": "my-volume",
+    "size": 20,
+    "volume_type": "SSD",
+    "availability_zone": "kr-pub-a",
+    "description": "My volume"
+  }
+}
+```
+
+### 스냅샷 작업
+
+| 작업 | Method | 경로 |
+|------|--------|------|
+| 스냅샷 목록 | `GET` | `/v2/{tenantId}/snapshots/detail` |
+| 스냅샷 조회 | `GET` | `/v2/{tenantId}/snapshots/{snapshotId}` |
+| 스냅샷 생성 | `POST` | `/v2/{tenantId}/snapshots` |
+| 스냅샷 삭제 | `DELETE` | `/v2/{tenantId}/snapshots/{snapshotId}` |
+
+#### 스냅샷 생성 요청
+
+```http
+POST /v2/{tenantId}/snapshots
+Content-Type: application/json
+X-Auth-Token: {token}
+
+{
+  "snapshot": {
+    "volume_id": "volume-id",
+    "name": "my-snapshot",
+    "description": "Daily backup",
+    "force": false
+  }
+}
+```
+
+### 볼륨 타입 작업
+
+| 작업 | Method | 경로 |
+|------|--------|------|
+| 볼륨 타입 목록 | `GET` | `/v2/{tenantId}/types` |
+
+---
+
+## Load Balancer API
+
+### 엔드포인트
+
+Load Balancer API는 VPC API와 동일한 네트워크 엔드포인트를 사용합니다.
+
+| 리전 | 엔드포인트 |
+|------|-----------|
+| KR1 (판교) | `https://kr1-api-network-infrastructure.nhncloudservice.com` |
+| KR2 (평촌) | `https://kr2-api-network-infrastructure.nhncloudservice.com` |
+| JP1 (도쿄) | `https://jp1-api-network-infrastructure.nhncloudservice.com` |
+
+### 로드 밸런서 작업
+
+| 작업 | Method | 경로 |
+|------|--------|------|
+| 로드 밸런서 목록 | `GET` | `/v2.0/lbaas/loadbalancers` |
+| 로드 밸런서 조회 | `GET` | `/v2.0/lbaas/loadbalancers/{lbId}` |
+| 로드 밸런서 생성 | `POST` | `/v2.0/lbaas/loadbalancers` |
+| 로드 밸런서 수정 | `PUT` | `/v2.0/lbaas/loadbalancers/{lbId}` |
+| 로드 밸런서 삭제 | `DELETE` | `/v2.0/lbaas/loadbalancers/{lbId}` |
+
+#### 로드 밸런서 생성 요청
+
+```http
+POST /v2.0/lbaas/loadbalancers
+Content-Type: application/json
+X-Auth-Token: {token}
+
+{
+  "loadbalancer": {
+    "name": "web-lb",
+    "vip_subnet_id": "subnet-id",
+    "description": "Web load balancer"
+  }
+}
+```
+
+### 리스너 작업
+
+| 작업 | Method | 경로 |
+|------|--------|------|
+| 리스너 목록 | `GET` | `/v2.0/lbaas/listeners` |
+| 리스너 조회 | `GET` | `/v2.0/lbaas/listeners/{listenerId}` |
+| 리스너 생성 | `POST` | `/v2.0/lbaas/listeners` |
+| 리스너 삭제 | `DELETE` | `/v2.0/lbaas/listeners/{listenerId}` |
+
+#### 리스너 생성 요청
+
+```http
+POST /v2.0/lbaas/listeners
+Content-Type: application/json
+X-Auth-Token: {token}
+
+{
+  "listener": {
+    "loadbalancer_id": "lb-id",
+    "protocol": "HTTP",
+    "protocol_port": 80,
+    "name": "http-listener"
+  }
+}
+```
+
+---
+
 ## 공통 헤더
 
 모든 API 요청에 필요한 헤더:

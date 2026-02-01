@@ -29,6 +29,8 @@ a1b2c3d4-...                            web-server  ACTIVE  m2.c1m2     192.168.
 | **인증** | OAuth 인증, Identity 인증, 토큰 캐싱, 다중 프로필 |
 | **VPC** | VPC, 서브넷, 보안 그룹, 플로팅 IP, 라우팅 테이블, 포트 관리 |
 | **Compute** | 인스턴스, Flavor, 이미지, 키페어, 가용성 영역 관리 |
+| **Block Storage** | 볼륨, 스냅샷, 볼륨 타입 관리 |
+| **Load Balancer** | 로드 밸런서, 리스너 관리 |
 
 ---
 
@@ -44,6 +46,8 @@ a1b2c3d4-...                            web-server  ACTIVE  m2.c1m2     192.168.
 
 - [VPC 명령어](Commands/VPC.md) - VPC, 서브넷, 보안 그룹 등
 - [Compute 명령어](Commands/Compute.md) - 인스턴스, 이미지, 키페어 등
+- [Block Storage 명령어](Commands/BlockStorage.md) - 볼륨, 스냅샷 관리
+- [Load Balancer 명령어](Commands/LoadBalancer.md) - 로드 밸런서, 리스너 관리
 - [전역 옵션](Commands/Global-Options.md) - 모든 명령어 공통 옵션
 
 ### 실전 예제

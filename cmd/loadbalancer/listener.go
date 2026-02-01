@@ -169,7 +169,7 @@ func runListenerCreate(cmd *cobra.Command, args []string) error {
 		return output.PrintJSON(l)
 	}
 
-	fmt.Printf("리스너가 생성되었습니다.\n")
+	fmt.Printf("✅ 리스너가 생성되었습니다.\n")
 	fmt.Printf("Listener ID: %s\n", l.ID)
 	fmt.Printf("Name:        %s\n", l.Name)
 	fmt.Printf("Protocol:    %s\n", l.Protocol)
@@ -191,6 +191,6 @@ func runListenerDelete(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	fmt.Printf("리스너 %s가 삭제되었습니다.\n", listenerID)
+	fmt.Printf("✅ 리스너 %s가 삭제되었습니다.\n", listenerID)
 	return nil
 }

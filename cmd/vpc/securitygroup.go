@@ -233,8 +233,20 @@ func runSGAddRule(cmd *cobra.Command, args []string) error {
 	} else if sgPortRange != "" {
 		parts := strings.Split(sgPortRange, "-")
 		if len(parts) == 2 {
-			min, _ := strconv.Atoi(parts[0])
-			max, _ := strconv.Atoi(parts[1])
+			min, err := strconv.Atoi(parts[0])
+			if err != nil {
+				return fmt.Errorf("잘못된 포트 범위 최솟값 '%s': %w", parts[0], err)
+			}
+			max, err := strconv.Atoi(parts[1])
+			if err != nil {
+				return fmt.Errorf("잘못된 포트 범위 최댓값 '%s': %w", parts[1], err)
+			}
+			if min > max {
+				return fmt.Errorf("포트 범위가 잘못되었습니다: 최솟값(%d)이 최댓값(%d)보다 큽니다", min, max)
+			}
+			if min < 1 || max > 65535 {
+				return fmt.Errorf("포트 범위는 1-65535 사이여야 합니다: %d-%d", min, max)
+			}
 			portMin = &min
 			portMax = &max
 		}

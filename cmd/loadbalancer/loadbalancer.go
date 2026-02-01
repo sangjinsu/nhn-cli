@@ -211,7 +211,7 @@ func runLBCreate(c *cobra.Command, args []string) error {
 		return output.PrintJSON(lb)
 	}
 
-	fmt.Printf("로드 밸런서가 생성되었습니다.\n")
+	fmt.Printf("✅ 로드 밸런서가 생성되었습니다.\n")
 	fmt.Printf("LB ID:       %s\n", lb.ID)
 	fmt.Printf("Name:        %s\n", lb.Name)
 	fmt.Printf("VIP Address: %s\n", lb.VipAddress)
@@ -248,7 +248,7 @@ func runLBUpdate(c *cobra.Command, args []string) error {
 		return output.PrintJSON(lb)
 	}
 
-	fmt.Printf("로드 밸런서가 수정되었습니다.\n")
+	fmt.Printf("✅ 로드 밸런서가 수정되었습니다.\n")
 	fmt.Printf("LB ID:  %s\n", lb.ID)
 	fmt.Printf("Name:   %s\n", lb.Name)
 
@@ -267,6 +267,6 @@ func runLBDelete(c *cobra.Command, args []string) error {
 		return err
 	}
 
-	fmt.Printf("로드 밸런서 %s가 삭제되었습니다.\n", lbID)
+	fmt.Printf("✅ 로드 밸런서 %s가 삭제되었습니다.\n", lbID)
 	return nil
 }

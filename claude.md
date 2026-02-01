@@ -55,6 +55,34 @@ NHN Cloud CLI는 NHN Cloud 서비스를 명령줄에서 관리할 수 있는 도
 | 키페어 생성 | `nhn compute keypair create` |
 | 가용성 영역 목록 | `nhn compute az list` |
 
+### Block Storage
+
+| 기능 | 명령어 |
+|------|--------|
+| 볼륨 목록 조회 | `nhn blockstorage volume list` |
+| 볼륨 상세 조회 | `nhn blockstorage volume describe <id>` |
+| 볼륨 생성 | `nhn blockstorage volume create` |
+| 볼륨 삭제 | `nhn blockstorage volume delete <id>` |
+| 스냅샷 목록 조회 | `nhn blockstorage snapshot list` |
+| 스냅샷 상세 조회 | `nhn blockstorage snapshot describe <id>` |
+| 스냅샷 생성 | `nhn blockstorage snapshot create` |
+| 스냅샷 삭제 | `nhn blockstorage snapshot delete <id>` |
+| 볼륨 타입 목록 | `nhn blockstorage type list` |
+
+### Load Balancer
+
+| 기능 | 명령어 |
+|------|--------|
+| 로드 밸런서 목록 조회 | `nhn loadbalancer list` (별칭: `nhn lb list`) |
+| 로드 밸런서 상세 조회 | `nhn loadbalancer describe <id>` |
+| 로드 밸런서 생성 | `nhn loadbalancer create` |
+| 로드 밸런서 수정 | `nhn loadbalancer update <id>` |
+| 로드 밸런서 삭제 | `nhn loadbalancer delete <id>` |
+| 리스너 목록 조회 | `nhn loadbalancer listener list` |
+| 리스너 상세 조회 | `nhn loadbalancer listener describe <id>` |
+| 리스너 생성 | `nhn loadbalancer listener create` |
+| 리스너 삭제 | `nhn loadbalancer listener delete <id>` |
+
 ---
 
 ## 설치
@@ -520,6 +548,24 @@ nhn --output json compute instance list | \
 | KR2 | `https://kr2-api-instance-infrastructure.nhncloudservice.com` |
 | JP1 | `https://jp1-api-instance-infrastructure.nhncloudservice.com` |
 
+### Block Storage API
+
+| 리전 | 엔드포인트 |
+|------|-----------|
+| KR1 | `https://kr1-api-block-storage-infrastructure.nhncloudservice.com` |
+| KR2 | `https://kr2-api-block-storage-infrastructure.nhncloudservice.com` |
+| JP1 | `https://jp1-api-block-storage-infrastructure.nhncloudservice.com` |
+
+### Load Balancer API
+
+Load Balancer API는 VPC API와 동일한 네트워크 엔드포인트를 사용합니다.
+
+| 리전 | 엔드포인트 |
+|------|-----------|
+| KR1 | `https://kr1-api-network-infrastructure.nhncloudservice.com` |
+| KR2 | `https://kr2-api-network-infrastructure.nhncloudservice.com` |
+| JP1 | `https://jp1-api-network-infrastructure.nhncloudservice.com` |
+
 ---
 
 ## API 참조
@@ -557,6 +603,34 @@ nhn --output json compute instance list | \
 | 키페어 목록 | GET | `/v2/{tenantId}/os-keypairs` |
 | 키페어 생성 | POST | `/v2/{tenantId}/os-keypairs` |
 
+### Block Storage API
+
+| 작업 | Method | 경로 |
+|------|--------|------|
+| 볼륨 목록 | GET | `/v2/{tenantId}/volumes/detail` |
+| 볼륨 조회 | GET | `/v2/{tenantId}/volumes/{volumeId}` |
+| 볼륨 생성 | POST | `/v2/{tenantId}/volumes` |
+| 볼륨 삭제 | DELETE | `/v2/{tenantId}/volumes/{volumeId}` |
+| 스냅샷 목록 | GET | `/v2/{tenantId}/snapshots/detail` |
+| 스냅샷 조회 | GET | `/v2/{tenantId}/snapshots/{snapshotId}` |
+| 스냅샷 생성 | POST | `/v2/{tenantId}/snapshots` |
+| 스냅샷 삭제 | DELETE | `/v2/{tenantId}/snapshots/{snapshotId}` |
+| 볼륨 타입 목록 | GET | `/v2/{tenantId}/types` |
+
+### Load Balancer API
+
+| 작업 | Method | 경로 |
+|------|--------|------|
+| 로드 밸런서 목록 | GET | `/v2.0/lbaas/loadbalancers` |
+| 로드 밸런서 조회 | GET | `/v2.0/lbaas/loadbalancers/{lbId}` |
+| 로드 밸런서 생성 | POST | `/v2.0/lbaas/loadbalancers` |
+| 로드 밸런서 수정 | PUT | `/v2.0/lbaas/loadbalancers/{lbId}` |
+| 로드 밸런서 삭제 | DELETE | `/v2.0/lbaas/loadbalancers/{lbId}` |
+| 리스너 목록 | GET | `/v2.0/lbaas/listeners` |
+| 리스너 조회 | GET | `/v2.0/lbaas/listeners/{listenerId}` |
+| 리스너 생성 | POST | `/v2.0/lbaas/listeners` |
+| 리스너 삭제 | DELETE | `/v2.0/lbaas/listeners/{listenerId}` |
+
 ---
 
 ## CI/CD
@@ -589,17 +663,17 @@ nhn --output json compute instance list | \
 │                         NHN Cloud CLI                           │
 ├─────────────────────────────────────────────────────────────────┤
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────────────┐ │
-│  │configure │  │   vpc    │  │ compute  │  │  (future cmds)   │ │
-│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────────┬─────────┘ │
-│       │             │             │                  │          │
-│  ┌────▼─────────────▼─────────────▼──────────────────▼────────┐ │
-│  │                    Internal Modules                         │ │
-│  │  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────────────┐│ │
-│  │  │ config  │  │  auth   │  │   vpc   │  │    compute      ││ │
-│  │  └────┬────┘  └────┬────┘  └────┬────┘  └────────┬────────┘│ │
-│  └───────┼────────────┼────────────┼────────────────┼─────────┘ │
-│          │            │            │                │           │
-│  ┌───────▼────────────▼────────────▼────────────────▼─────────┐ │
+│  │configure │  │  vpc   │  │compute │  │blockstorage│  │loadbalancer│ │
+│  └────┬─────┘  └───┬───┘  └───┬────┘  └─────┬──────┘  └─────┬──────┘ │
+│       │            │          │              │               │        │
+│  ┌────▼────────────▼──────────▼──────────────▼───────────────▼──────┐ │
+│  │                    Internal Modules                               │ │
+│  │  ┌───────┐ ┌──────┐ ┌─────┐ ┌───────┐ ┌────────────┐ ┌────────┐ │ │
+│  │  │config │ │ auth │ │ vpc │ │compute│ │blockstorage│ │  lb    │ │ │
+│  │  └───┬───┘ └──┬───┘ └──┬──┘ └───┬───┘ └─────┬──────┘ └───┬────┘ │ │
+│  └───────┼────────────┼────────────┼───────────┼──────────────┼─────────┘ │
+│          │            │            │           │              │           │
+│  ┌───────▼────────────▼────────────▼───────────▼──────────────▼─────────┐ │
 │  │                     HTTP Client                             │ │
 │  └─────────────────────────┬───────────────────────────────────┘ │
 └────────────────────────────┼────────────────────────────────────┘
@@ -608,9 +682,9 @@ nhn --output json compute instance list | \
 ┌─────────────────────────────────────────────────────────────────┐
 │                      NHN Cloud APIs                             │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────────────┐ │
-│  │  OAuth   │  │ Identity │  │   VPC    │  │     Compute      │ │
-│  │   API    │  │   API    │  │   API    │  │       API        │ │
-│  └──────────┘  └──────────┘  └──────────┘  └──────────────────┘ │
+│  │ OAuth │ │Identity│ │  VPC  │ │Compute│ │BlockStorage│ │   LB   │ │
+│  │  API  │ │  API   │ │  API  │ │  API  │ │    API     │ │  API   │ │
+│  └───────┘ └────────┘ └───────┘ └───────┘ └────────────┘ └────────┘ │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -675,8 +749,8 @@ nhn --debug compute instance list
 
 ## 향후 개발 계획
 
-- [ ] Block Storage 관리
-- [ ] Load Balancer 관리
+- [x] Block Storage 관리
+- [x] Load Balancer 관리
 - [ ] Object Storage 관리
 - [ ] Auto Scale 관리
 - [ ] DNS 관리

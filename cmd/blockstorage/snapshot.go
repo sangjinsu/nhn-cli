@@ -159,7 +159,7 @@ func runSnapshotCreate(cmd *cobra.Command, args []string) error {
 		return output.PrintJSON(snap)
 	}
 
-	fmt.Printf("스냅샷이 생성되었습니다.\n")
+	fmt.Printf("✅ 스냅샷이 생성되었습니다.\n")
 	fmt.Printf("Snapshot ID:  %s\n", snap.ID)
 	fmt.Printf("Name:         %s\n", snap.Name)
 	fmt.Printf("Volume ID:    %s\n", snap.VolumeID)
@@ -180,6 +180,6 @@ func runSnapshotDelete(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	fmt.Printf("스냅샷 %s가 삭제되었습니다.\n", snapshotID)
+	fmt.Printf("✅ 스냅샷 %s가 삭제되었습니다.\n", snapshotID)
 	return nil
 }
