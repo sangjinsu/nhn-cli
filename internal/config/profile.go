@@ -29,7 +29,26 @@ func (p *ProfileConfig) Validate() error {
 }
 
 func (p *ProfileConfig) GetAuthTypeDisplay() string {
-	return "Identity + OAuth"
+	base := "Identity + OAuth"
+	if p.AppKey != "" {
+		base += " + DNS"
+	}
+	if p.PipelineAppKey != "" {
+		base += " + Pipeline"
+	}
+	if p.DeployAppKey != "" {
+		base += " + Deploy"
+	}
+	if p.CDNAppKey != "" {
+		base += " + CDN"
+	}
+	if p.AppGuardAppKey != "" {
+		base += " + AppGuard"
+	}
+	if p.GamebaseAppID != "" {
+		base += " + Gamebase"
+	}
+	return base
 }
 
 func (p *ProfileConfig) GetMaskedCredentials() string {

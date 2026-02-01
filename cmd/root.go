@@ -29,6 +29,12 @@ AWS CLI와 유사한 사용법을 제공하여 친숙하게 사용할 수 있습
   - Block Storage: 블록 스토리지 관리
   - Load Balancer: 로드 밸런서 관리
   - Object Storage: 오브젝트 스토리지 관리
+  - DNS Plus: DNS Zone 및 Record Set 관리
+  - Pipeline: 파이프라인 실행 관리
+  - Deploy: 배포 실행 관리
+  - CDN: CDN 서비스 관리
+  - AppGuard: 앱 보안 탐지 현황
+  - Gamebase: 게임 회원/정지/론칭 관리
 
 사용 예시:
   nhn configure                    # 인증 정보 설정

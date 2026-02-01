@@ -83,6 +83,21 @@ NHN Cloud CLI는 NHN Cloud 서비스를 명령줄에서 관리할 수 있는 도
 | 리스너 생성 | `nhn loadbalancer listener create` |
 | 리스너 삭제 | `nhn loadbalancer listener delete <id>` |
 
+### DNS Plus
+
+| 기능 | 명령어 |
+|------|--------|
+| Zone 목록 조회 | `nhn dns zone list` |
+| Zone 상세 조회 | `nhn dns zone describe <zone-id>` |
+| Zone 생성 | `nhn dns zone create --name <fqdn>` |
+| Zone 수정 | `nhn dns zone update <zone-id> --description <desc>` |
+| Zone 삭제 | `nhn dns zone delete <zone-id>` |
+| Record Set 목록 조회 | `nhn dns recordset list --zone-id <id>` |
+| Record Set 상세 조회 | `nhn dns recordset describe <rs-id> --zone-id <id>` |
+| Record Set 생성 | `nhn dns recordset create --zone-id <id> --name <name> --type <type> --data <data>` |
+| Record Set 수정 | `nhn dns recordset update <rs-id> --zone-id <id>` |
+| Record Set 삭제 | `nhn dns recordset delete <rs-id> --zone-id <id>` |
+
 ### Object Storage
 
 | 기능 | 명령어 |
@@ -450,6 +465,61 @@ nhn os object delete test.txt --container my-container
 
 ---
 
+## DNS Plus 명령어
+
+### Zone 관리
+
+```bash
+# Zone 목록 조회
+nhn dns zone list
+
+# Zone 상세 조회
+nhn dns zone describe <zone-id>
+
+# Zone 생성
+nhn dns zone create --name example.com. --description "My Zone"
+
+# Zone 수정
+nhn dns zone update <zone-id> --description "Updated description"
+
+# Zone 삭제
+nhn dns zone delete <zone-id>
+```
+
+### Record Set 관리
+
+```bash
+# Record Set 목록 조회
+nhn dns recordset list --zone-id <zone-id>
+
+# Record Set 상세 조회
+nhn dns recordset describe <recordset-id> --zone-id <zone-id>
+
+# A 레코드 생성
+nhn dns recordset create --zone-id <zone-id> \
+  --name www.example.com. \
+  --type A \
+  --ttl 300 \
+  --data 1.2.3.4
+
+# 다중 레코드 생성
+nhn dns recordset create --zone-id <zone-id> \
+  --name www.example.com. \
+  --type A \
+  --ttl 300 \
+  --data 1.2.3.4,5.6.7.8
+
+# Record Set 수정
+nhn dns recordset update <recordset-id> --zone-id <zone-id> \
+  --ttl 600 \
+  --data 1.2.3.4
+
+# Record Set 삭제
+nhn dns recordset delete <recordset-id> --zone-id <zone-id>
+```
+
+---
+
 ## 실전 예제
 
 ### 예제 1: 기본 인프라 구성
@@ -626,6 +696,15 @@ Load Balancer API는 VPC API와 동일한 네트워크 엔드포인트를 사용
 | KR2 | `https://kr2-api-network-infrastructure.nhncloudservice.com` |
 | JP1 | `https://jp1-api-network-infrastructure.nhncloudservice.com` |
 
+### DNS Plus API (글로벌)
+
+| 엔드포인트 |
+|-----------|
+| `https://dnsplus.api.nhncloudservice.com` |
+
+DNS Plus는 글로벌 서비스로 리전 구분 없이 단일 엔드포인트를 사용합니다.
+인증은 AppKey 기반으로, URL 경로에 AppKey를 포함합니다.
+
 ### Object Storage API
 
 | 리전 | 엔드포인트 |
@@ -700,6 +779,23 @@ Base URL 패턴: `https://{region}-api-object-storage.nhncloudservice.com/v1/AUT
 | 리스너 조회 | GET | `/v2.0/lbaas/listeners/{listenerId}` |
 | 리스너 생성 | POST | `/v2.0/lbaas/listeners` |
 | 리스너 삭제 | DELETE | `/v2.0/lbaas/listeners/{listenerId}` |
+
+### DNS Plus API
+
+| 작업 | Method | 경로 |
+|------|--------|------|
+| Zone 목록 | GET | `/zones` |
+| Zone 조회 | GET | `/zones?zoneIdList={zoneId}` |
+| Zone 생성 | POST | `/zones` |
+| Zone 수정 | PUT | `/zones/{zoneId}` |
+| Zone 삭제 | DELETE | `/zones/async?zoneIdList={zoneId}` |
+| Record Set 목록 | GET | `/zones/{zoneId}/recordsets` |
+| Record Set 조회 | GET | `/zones/{zoneId}/recordsets?recordsetIdList={rsId}` |
+| Record Set 생성 | POST | `/zones/{zoneId}/recordsets` |
+| Record Set 수정 | PUT | `/zones/{zoneId}/recordsets/{rsId}` |
+| Record Set 삭제 | DELETE | `/zones/{zoneId}/recordsets?recordsetIdList={rsId}` |
+
+Base URL: `https://dnsplus.api.nhncloudservice.com/dnsplus/v1.0/appkeys/{appkey}`
 
 ### Object Storage API
 
@@ -837,7 +933,7 @@ nhn --debug compute instance list
 - [x] Load Balancer 관리
 - [x] Object Storage 관리
 - [ ] Auto Scale 관리
-- [ ] DNS 관리
+- [x] DNS 관리
 - [ ] 자동완성 지원 (bash, zsh, fish)
 - [ ] 설정 파일 암호화
 - [ ] 병렬 처리 지원

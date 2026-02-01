@@ -22,6 +22,26 @@ type ProfileConfig struct {
 	UserAccessKeyID string `json:"user_access_key_id,omitempty"`
 	SecretAccessKey string `json:"secret_access_key,omitempty"`
 
+	// DNS Plus (AppKey 기반 인증) - 선택
+	AppKey string `json:"app_key,omitempty"`
+
+	// Pipeline
+	PipelineAppKey string `json:"pipeline_app_key,omitempty"`
+
+	// Deploy
+	DeployAppKey string `json:"deploy_app_key,omitempty"`
+
+	// CDN
+	CDNAppKey    string `json:"cdn_app_key,omitempty"`
+	CDNSecretKey string `json:"cdn_secret_key,omitempty"`
+
+	// AppGuard
+	AppGuardAppKey string `json:"appguard_app_key,omitempty"`
+
+	// Gamebase
+	GamebaseAppID     string `json:"gamebase_app_id,omitempty"`
+	GamebaseSecretKey string `json:"gamebase_secret_key,omitempty"`
+
 	Region string `json:"region"`
 }
 

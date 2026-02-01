@@ -9,10 +9,16 @@ import (
 	"os"
 
 	"nhncli/cmd"
+	_ "nhncli/cmd/appguard"
 	_ "nhncli/cmd/blockstorage"
+	_ "nhncli/cmd/cdn"
 	_ "nhncli/cmd/compute"
+	_ "nhncli/cmd/deploy"
+	_ "nhncli/cmd/dns"
+	_ "nhncli/cmd/gamebase"
 	_ "nhncli/cmd/loadbalancer"
 	_ "nhncli/cmd/objectstorage"
+	_ "nhncli/cmd/pipeline"
 	_ "nhncli/cmd/vpc"
 )
 

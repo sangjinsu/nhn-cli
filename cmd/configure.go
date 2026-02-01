@@ -85,6 +85,57 @@ func runConfigure(cmd *cobra.Command, args []string) error {
 	profileConfig.UserAccessKeyID = userAccessKeyID
 	profileConfig.SecretAccessKey = secretAccessKey
 
+	// DNS Plus 설정 (선택)
+	fmt.Println("\n--- DNS Plus 설정 (선택) ---")
+	fmt.Println("")
+	fmt.Println("📌 AppKey 확인 방법:")
+	fmt.Println("   1. NHN Cloud 콘솔 > DNS Plus 서비스 활성화")
+	fmt.Println("   2. URL에서 AppKey 확인 또는 서비스 설정에서 확인")
+	fmt.Println("")
+	appKey := readInput(reader, "AppKey (없으면 Enter): ", "")
+	if appKey != "" {
+		profileConfig.AppKey = appKey
+	}
+
+	// Pipeline 설정 (선택)
+	fmt.Println("\n--- Pipeline 설정 (선택) ---")
+	pipelineAppKey := readInput(reader, "Pipeline AppKey (없으면 Enter): ", "")
+	if pipelineAppKey != "" {
+		profileConfig.PipelineAppKey = pipelineAppKey
+	}
+
+	// Deploy 설정 (선택)
+	fmt.Println("\n--- Deploy 설정 (선택) ---")
+	deployAppKey := readInput(reader, "Deploy AppKey (없으면 Enter): ", "")
+	if deployAppKey != "" {
+		profileConfig.DeployAppKey = deployAppKey
+	}
+
+	// CDN 설정 (선택)
+	fmt.Println("\n--- CDN 설정 (선택) ---")
+	cdnAppKey := readInput(reader, "CDN AppKey (없으면 Enter): ", "")
+	if cdnAppKey != "" {
+		profileConfig.CDNAppKey = cdnAppKey
+		cdnSecretKey := readSecretInput(reader, "CDN Secret Key: ")
+		profileConfig.CDNSecretKey = cdnSecretKey
+	}
+
+	// AppGuard 설정 (선택)
+	fmt.Println("\n--- AppGuard 설정 (선택) ---")
+	appGuardAppKey := readInput(reader, "AppGuard AppKey (없으면 Enter): ", "")
+	if appGuardAppKey != "" {
+		profileConfig.AppGuardAppKey = appGuardAppKey
+	}
+
+	// Gamebase 설정 (선택)
+	fmt.Println("\n--- Gamebase 설정 (선택) ---")
+	gamebaseAppID := readInput(reader, "Gamebase App ID (없으면 Enter): ", "")
+	if gamebaseAppID != "" {
+		profileConfig.GamebaseAppID = gamebaseAppID
+		gamebaseSecretKey := readSecretInput(reader, "Gamebase Secret Key: ")
+		profileConfig.GamebaseSecretKey = gamebaseSecretKey
+	}
+
 	// 리전 설정
 	fmt.Println("\n=== 리전 설정 ===")
 	fmt.Println("")
