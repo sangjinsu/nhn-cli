@@ -207,10 +207,19 @@ func runInstanceCreate(cmd *cobra.Command, args []string) error {
 	req := &compute.InstanceCreateRequest{
 		Server: compute.InstanceCreateBody{
 			Name:      instanceName,
-			ImageRef:  instanceImageID,
 			FlavorRef: instanceFlavorID,
 			Networks: []compute.NetworkRef{
 				{UUID: instanceNetworkID},
+			},
+			BlockDeviceMapping: []compute.BlockDeviceMapping{
+				{
+					BootIndex:           0,
+					UUID:                instanceImageID,
+					SourceType:          "image",
+					DestinationType:     "volume",
+					VolumeSize:          20,
+					DeleteOnTermination: true,
+				},
 			},
 		},
 	}
