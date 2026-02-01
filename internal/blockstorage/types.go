@@ -1,6 +1,38 @@
 package blockstorage
 
-import "time"
+import (
+	"fmt"
+	"strings"
+	"time"
+)
+
+// FlexTime handles multiple time formats from NHN Cloud API
+type FlexTime struct {
+	time.Time
+}
+
+func (ft *FlexTime) UnmarshalJSON(b []byte) error {
+	s := strings.Trim(string(b), "\"")
+	if s == "null" || s == "" {
+		return nil
+	}
+
+	formats := []string{
+		time.RFC3339,
+		"2006-01-02T15:04:05.000000",
+		"2006-01-02T15:04:05",
+		"2006-01-02 15:04:05",
+	}
+
+	for _, f := range formats {
+		t, err := time.Parse(f, s)
+		if err == nil {
+			ft.Time = t
+			return nil
+		}
+	}
+	return fmt.Errorf("unable to parse time: %s", s)
+}
 
 type Volume struct {
 	ID               string            `json:"id"`
@@ -10,8 +42,8 @@ type Volume struct {
 	Size             int               `json:"size"`
 	VolumeType       string            `json:"volume_type"`
 	AvailabilityZone string            `json:"availability_zone"`
-	CreatedAt        time.Time         `json:"created_at"`
-	UpdatedAt        time.Time         `json:"updated_at"`
+	CreatedAt        FlexTime          `json:"created_at"`
+	UpdatedAt        FlexTime          `json:"updated_at"`
 	Attachments      []Attachment      `json:"attachments"`
 	Metadata         map[string]string `json:"metadata"`
 	SnapshotID       string            `json:"snapshot_id"`
@@ -56,8 +88,8 @@ type Snapshot struct {
 	Status      string            `json:"status"`
 	Size        int               `json:"size"`
 	VolumeID    string            `json:"volume_id"`
-	CreatedAt   time.Time         `json:"created_at"`
-	UpdatedAt   time.Time         `json:"updated_at"`
+	CreatedAt   FlexTime          `json:"created_at"`
+	UpdatedAt   FlexTime          `json:"updated_at"`
 	Metadata    map[string]string `json:"metadata"`
 }
 
