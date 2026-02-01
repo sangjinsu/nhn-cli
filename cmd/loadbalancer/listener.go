@@ -30,10 +30,11 @@ var listenerListCmd = &cobra.Command{
 }
 
 var listenerDescribeCmd = &cobra.Command{
-	Use:   "describe <listener-id>",
-	Short: "리스너 상세 조회",
-	Args:  cobra.ExactArgs(1),
-	RunE:  runListenerDescribe,
+	Use:               "describe <listener-id>",
+	Short:             "리스너 상세 조회",
+	Args:              cobra.ExactArgs(1),
+	ValidArgsFunction: completeListenerIDs,
+	RunE:              runListenerDescribe,
 }
 
 var listenerCreateCmd = &cobra.Command{
@@ -50,10 +51,11 @@ var listenerCreateCmd = &cobra.Command{
 }
 
 var listenerDeleteCmd = &cobra.Command{
-	Use:   "delete <listener-id>",
-	Short: "리스너 삭제",
-	Args:  cobra.ExactArgs(1),
-	RunE:  runListenerDelete,
+	Use:               "delete <listener-id>",
+	Short:             "리스너 삭제",
+	Args:              cobra.ExactArgs(1),
+	ValidArgsFunction: completeListenerIDs,
+	RunE:              runListenerDelete,
 }
 
 func init() {
@@ -193,4 +195,23 @@ func runListenerDelete(cmd *cobra.Command, args []string) error {
 
 	fmt.Printf("✅ 리스너 %s가 삭제되었습니다.\n", listenerID)
 	return nil
+}
+
+func completeListenerIDs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	if len(args) != 0 {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+	client, err := loadbalancer.NewClient(GetProfile(), GetRegion(), GetDebug())
+	if err != nil {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+	listeners, err := client.ListListeners()
+	if err != nil {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+	var completions []string
+	for _, l := range listeners {
+		completions = append(completions, fmt.Sprintf("%s\t%s", l.ID, l.Name))
+	}
+	return completions, cobra.ShellCompDirectiveNoFileComp
 }

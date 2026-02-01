@@ -33,10 +33,11 @@ var instanceListCmd = &cobra.Command{
 }
 
 var instanceDescribeCmd = &cobra.Command{
-	Use:   "describe <instance-id>",
-	Short: "인스턴스 상세 조회",
-	Args:  cobra.ExactArgs(1),
-	RunE:  runInstanceDescribe,
+	Use:               "describe <instance-id>",
+	Short:             "인스턴스 상세 조회",
+	Args:              cobra.ExactArgs(1),
+	RunE:              runInstanceDescribe,
+	ValidArgsFunction: completeInstanceIDs,
 }
 
 var instanceCreateCmd = &cobra.Command{
@@ -56,31 +57,35 @@ var instanceCreateCmd = &cobra.Command{
 }
 
 var instanceDeleteCmd = &cobra.Command{
-	Use:   "delete <instance-id>",
-	Short: "인스턴스 삭제",
-	Args:  cobra.ExactArgs(1),
-	RunE:  runInstanceDelete,
+	Use:               "delete <instance-id>",
+	Short:             "인스턴스 삭제",
+	Args:              cobra.ExactArgs(1),
+	RunE:              runInstanceDelete,
+	ValidArgsFunction: completeInstanceIDs,
 }
 
 var instanceStartCmd = &cobra.Command{
-	Use:   "start <instance-id>",
-	Short: "인스턴스 시작",
-	Args:  cobra.ExactArgs(1),
-	RunE:  runInstanceStart,
+	Use:               "start <instance-id>",
+	Short:             "인스턴스 시작",
+	Args:              cobra.ExactArgs(1),
+	RunE:              runInstanceStart,
+	ValidArgsFunction: completeInstanceIDs,
 }
 
 var instanceStopCmd = &cobra.Command{
-	Use:   "stop <instance-id>",
-	Short: "인스턴스 중지",
-	Args:  cobra.ExactArgs(1),
-	RunE:  runInstanceStop,
+	Use:               "stop <instance-id>",
+	Short:             "인스턴스 중지",
+	Args:              cobra.ExactArgs(1),
+	RunE:              runInstanceStop,
+	ValidArgsFunction: completeInstanceIDs,
 }
 
 var instanceRebootCmd = &cobra.Command{
-	Use:   "reboot <instance-id>",
-	Short: "인스턴스 재부팅",
-	Args:  cobra.ExactArgs(1),
-	RunE:  runInstanceReboot,
+	Use:               "reboot <instance-id>",
+	Short:             "인스턴스 재부팅",
+	Args:              cobra.ExactArgs(1),
+	RunE:              runInstanceReboot,
+	ValidArgsFunction: completeInstanceIDs,
 }
 
 func init() {
@@ -106,6 +111,25 @@ func init() {
 	instanceCreateCmd.MarkFlagRequired("network-id")
 
 	instanceRebootCmd.Flags().BoolVar(&instanceHardReboot, "hard", false, "하드 리부트 (강제 재부팅)")
+}
+
+func completeInstanceIDs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	if len(args) != 0 {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+	client, err := compute.NewClient(GetProfile(), GetRegion(), GetDebug())
+	if err != nil {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+	instances, err := client.ListInstances()
+	if err != nil {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+	var completions []string
+	for _, inst := range instances {
+		completions = append(completions, fmt.Sprintf("%s\t%s", inst.ID, inst.Name))
+	}
+	return completions, cobra.ShellCompDirectiveNoFileComp
 }
 
 func runInstanceList(cmd *cobra.Command, args []string) error {

@@ -9,10 +9,11 @@ import (
 )
 
 var deleteCmd = &cobra.Command{
-	Use:   "delete <vpc-id>",
-	Short: "VPC 삭제",
-	Args:  cobra.ExactArgs(1),
-	RunE:  runDelete,
+	Use:               "delete <vpc-id>",
+	Short:             "VPC 삭제",
+	Args:              cobra.ExactArgs(1),
+	RunE:              runDelete,
+	ValidArgsFunction: completeVPCIDs,
 }
 
 func init() {

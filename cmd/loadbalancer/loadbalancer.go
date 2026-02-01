@@ -39,10 +39,11 @@ var lbListCmd = &cobra.Command{
 }
 
 var lbDescribeCmd = &cobra.Command{
-	Use:   "describe <lb-id>",
-	Short: "로드 밸런서 상세 조회",
-	Args:  cobra.ExactArgs(1),
-	RunE:  runLBDescribe,
+	Use:               "describe <lb-id>",
+	Short:             "로드 밸런서 상세 조회",
+	Args:              cobra.ExactArgs(1),
+	ValidArgsFunction: completeLBIDs,
+	RunE:              runLBDescribe,
 }
 
 var lbCreateCmd = &cobra.Command{
@@ -58,17 +59,19 @@ var lbCreateCmd = &cobra.Command{
 }
 
 var lbUpdateCmd = &cobra.Command{
-	Use:   "update <lb-id>",
-	Short: "로드 밸런서 수정",
-	Args:  cobra.ExactArgs(1),
-	RunE:  runLBUpdate,
+	Use:               "update <lb-id>",
+	Short:             "로드 밸런서 수정",
+	Args:              cobra.ExactArgs(1),
+	ValidArgsFunction: completeLBIDs,
+	RunE:              runLBUpdate,
 }
 
 var lbDeleteCmd = &cobra.Command{
-	Use:   "delete <lb-id>",
-	Short: "로드 밸런서 삭제",
-	Args:  cobra.ExactArgs(1),
-	RunE:  runLBDelete,
+	Use:               "delete <lb-id>",
+	Short:             "로드 밸런서 삭제",
+	Args:              cobra.ExactArgs(1),
+	ValidArgsFunction: completeLBIDs,
+	RunE:              runLBDelete,
 }
 
 func init() {
@@ -269,4 +272,23 @@ func runLBDelete(c *cobra.Command, args []string) error {
 
 	fmt.Printf("✅ 로드 밸런서 %s가 삭제되었습니다.\n", lbID)
 	return nil
+}
+
+func completeLBIDs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	if len(args) != 0 {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+	client, err := loadbalancer.NewClient(GetProfile(), GetRegion(), GetDebug())
+	if err != nil {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+	lbs, err := client.ListLoadBalancers()
+	if err != nil {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+	var completions []string
+	for _, lb := range lbs {
+		completions = append(completions, fmt.Sprintf("%s\t%s", lb.ID, lb.Name))
+	}
+	return completions, cobra.ShellCompDirectiveNoFileComp
 }

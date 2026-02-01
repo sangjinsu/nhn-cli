@@ -30,10 +30,11 @@ var volumeListCmd = &cobra.Command{
 }
 
 var volumeDescribeCmd = &cobra.Command{
-	Use:   "describe <volume-id>",
-	Short: "볼륨 상세 조회",
-	Args:  cobra.ExactArgs(1),
-	RunE:  runVolumeDescribe,
+	Use:               "describe <volume-id>",
+	Short:             "볼륨 상세 조회",
+	Args:              cobra.ExactArgs(1),
+	ValidArgsFunction: completeVolumeIDs,
+	RunE:              runVolumeDescribe,
 }
 
 var volumeCreateCmd = &cobra.Command{
@@ -50,10 +51,11 @@ var volumeCreateCmd = &cobra.Command{
 }
 
 var volumeDeleteCmd = &cobra.Command{
-	Use:   "delete <volume-id>",
-	Short: "볼륨 삭제",
-	Args:  cobra.ExactArgs(1),
-	RunE:  runVolumeDelete,
+	Use:               "delete <volume-id>",
+	Short:             "볼륨 삭제",
+	Args:              cobra.ExactArgs(1),
+	ValidArgsFunction: completeVolumeIDs,
+	RunE:              runVolumeDelete,
 }
 
 func init() {
@@ -204,4 +206,23 @@ func runVolumeDelete(cmd *cobra.Command, args []string) error {
 
 	fmt.Printf("✅ 볼륨 %s가 삭제되었습니다.\n", volumeID)
 	return nil
+}
+
+func completeVolumeIDs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	if len(args) != 0 {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+	client, err := blockstorage.NewClient(GetProfile(), GetRegion(), GetDebug())
+	if err != nil {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+	volumes, err := client.ListVolumes()
+	if err != nil {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+	var completions []string
+	for _, v := range volumes {
+		completions = append(completions, fmt.Sprintf("%s\t%s", v.ID, v.Name))
+	}
+	return completions, cobra.ShellCompDirectiveNoFileComp
 }

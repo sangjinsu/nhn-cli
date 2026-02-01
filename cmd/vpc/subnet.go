@@ -27,10 +27,11 @@ var subnetListCmd = &cobra.Command{
 }
 
 var subnetDescribeCmd = &cobra.Command{
-	Use:   "describe <subnet-id>",
-	Short: "서브넷 상세 조회",
-	Args:  cobra.ExactArgs(1),
-	RunE:  runSubnetDescribe,
+	Use:               "describe <subnet-id>",
+	Short:             "서브넷 상세 조회",
+	Args:              cobra.ExactArgs(1),
+	RunE:              runSubnetDescribe,
+	ValidArgsFunction: completeSubnetIDs,
 }
 
 var subnetCreateCmd = &cobra.Command{
@@ -44,10 +45,11 @@ var subnetCreateCmd = &cobra.Command{
 }
 
 var subnetDeleteCmd = &cobra.Command{
-	Use:   "delete <subnet-id>",
-	Short: "서브넷 삭제",
-	Args:  cobra.ExactArgs(1),
-	RunE:  runSubnetDelete,
+	Use:               "delete <subnet-id>",
+	Short:             "서브넷 삭제",
+	Args:              cobra.ExactArgs(1),
+	RunE:              runSubnetDelete,
+	ValidArgsFunction: completeSubnetIDs,
 }
 
 func init() {
@@ -65,6 +67,25 @@ func init() {
 	subnetCreateCmd.MarkFlagRequired("vpc-id")
 	subnetCreateCmd.MarkFlagRequired("name")
 	subnetCreateCmd.MarkFlagRequired("cidr")
+}
+
+func completeSubnetIDs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	if len(args) != 0 {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+	client, err := vpc.NewClient(GetProfile(), GetRegion(), GetDebug())
+	if err != nil {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+	subnets, err := client.ListSubnets("")
+	if err != nil {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+	var completions []string
+	for _, s := range subnets {
+		completions = append(completions, fmt.Sprintf("%s\t%s", s.ID, s.Name))
+	}
+	return completions, cobra.ShellCompDirectiveNoFileComp
 }
 
 func runSubnetList(cmd *cobra.Command, args []string) error {

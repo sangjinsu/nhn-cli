@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"nhncli/internal/config"
 )
 
 var (
@@ -45,6 +46,27 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&region, "region", "", "리전 지정 (프로필 설정 오버라이드)")
 	rootCmd.PersistentFlags().StringVar(&output, "output", "table", "출력 형식 (table, json)")
 	rootCmd.PersistentFlags().BoolVar(&debug, "debug", false, "디버그 모드")
+
+	rootCmd.RegisterFlagCompletionFunc("profile", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		cfg, err := config.Load()
+		if err != nil {
+			return nil, cobra.ShellCompDirectiveNoFileComp
+		}
+		return cfg.ListProfiles(), cobra.ShellCompDirectiveNoFileComp
+	})
+
+	rootCmd.RegisterFlagCompletionFunc("region", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		regions := []string{
+			"KR1\t한국 (판교)",
+			"KR2\t한국 (평촌)",
+			"JP1\t일본 (도쿄)",
+		}
+		return regions, cobra.ShellCompDirectiveNoFileComp
+	})
+
+	rootCmd.RegisterFlagCompletionFunc("output", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return []string{"table\t테이블 형식", "json\tJSON 형식"}, cobra.ShellCompDirectiveNoFileComp
+	})
 }
 
 func GetProfile() string {

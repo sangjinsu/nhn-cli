@@ -22,8 +22,9 @@ var updateCmd = &cobra.Command{
 예시:
   nhn vpc update <vpc-id> --name new-name
   nhn vpc update <vpc-id> --cidr 10.0.0.0/16`,
-	Args: cobra.ExactArgs(1),
-	RunE: runUpdate,
+	Args:              cobra.ExactArgs(1),
+	RunE:              runUpdate,
+	ValidArgsFunction: completeVPCIDs,
 }
 
 func init() {

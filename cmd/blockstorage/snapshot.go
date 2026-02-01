@@ -28,10 +28,11 @@ var snapshotListCmd = &cobra.Command{
 }
 
 var snapshotDescribeCmd = &cobra.Command{
-	Use:   "describe <snapshot-id>",
-	Short: "스냅샷 상세 조회",
-	Args:  cobra.ExactArgs(1),
-	RunE:  runSnapshotDescribe,
+	Use:               "describe <snapshot-id>",
+	Short:             "스냅샷 상세 조회",
+	Args:              cobra.ExactArgs(1),
+	ValidArgsFunction: completeSnapshotIDs,
+	RunE:              runSnapshotDescribe,
 }
 
 var snapshotCreateCmd = &cobra.Command{
@@ -47,10 +48,11 @@ var snapshotCreateCmd = &cobra.Command{
 }
 
 var snapshotDeleteCmd = &cobra.Command{
-	Use:   "delete <snapshot-id>",
-	Short: "스냅샷 삭제",
-	Args:  cobra.ExactArgs(1),
-	RunE:  runSnapshotDelete,
+	Use:               "delete <snapshot-id>",
+	Short:             "스냅샷 삭제",
+	Args:              cobra.ExactArgs(1),
+	ValidArgsFunction: completeSnapshotIDs,
+	RunE:              runSnapshotDelete,
 }
 
 func init() {
@@ -182,4 +184,23 @@ func runSnapshotDelete(cmd *cobra.Command, args []string) error {
 
 	fmt.Printf("✅ 스냅샷 %s가 삭제되었습니다.\n", snapshotID)
 	return nil
+}
+
+func completeSnapshotIDs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	if len(args) != 0 {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+	client, err := blockstorage.NewClient(GetProfile(), GetRegion(), GetDebug())
+	if err != nil {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+	snapshots, err := client.ListSnapshots()
+	if err != nil {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+	var completions []string
+	for _, s := range snapshots {
+		completions = append(completions, fmt.Sprintf("%s\t%s", s.ID, s.Name))
+	}
+	return completions, cobra.ShellCompDirectiveNoFileComp
 }
