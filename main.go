@@ -12,6 +12,7 @@ import (
 	_ "nhncli/cmd/blockstorage"
 	_ "nhncli/cmd/compute"
 	_ "nhncli/cmd/loadbalancer"
+	_ "nhncli/cmd/objectstorage"
 	_ "nhncli/cmd/vpc"
 )
 

@@ -28,6 +28,7 @@ AWS CLI와 유사한 사용법을 제공하여 친숙하게 사용할 수 있습
   - Compute: 인스턴스 관리
   - Block Storage: 블록 스토리지 관리
   - Load Balancer: 로드 밸런서 관리
+  - Object Storage: 오브젝트 스토리지 관리
 
 사용 예시:
   nhn configure                    # 인증 정보 설정
