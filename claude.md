@@ -83,6 +83,20 @@ NHN Cloud CLI는 NHN Cloud 서비스를 명령줄에서 관리할 수 있는 도
 | 리스너 생성 | `nhn loadbalancer listener create` |
 | 리스너 삭제 | `nhn loadbalancer listener delete <id>` |
 
+### Object Storage
+
+| 기능 | 명령어 |
+|------|--------|
+| 컨테이너 목록 조회 | `nhn objectstorage container list` (별칭: `nhn os container list`) |
+| 컨테이너 메타데이터 조회 | `nhn objectstorage container describe <name>` |
+| 컨테이너 생성 | `nhn objectstorage container create <name>` |
+| 컨테이너 삭제 | `nhn objectstorage container delete <name>` |
+| 오브젝트 목록 조회 | `nhn objectstorage object list --container <name>` |
+| 오브젝트 업로드 | `nhn objectstorage object upload --container <name> --file <path>` |
+| 오브젝트 다운로드 | `nhn objectstorage object download <object> --container <name>` |
+| 오브젝트 삭제 | `nhn objectstorage object delete <object> --container <name>` |
+| 오브젝트 메타데이터 조회 | `nhn objectstorage object describe <object> --container <name>` |
+
 ---
 
 ## 설치
@@ -390,6 +404,52 @@ nhn compute az list
 
 ---
 
+## Object Storage 명령어
+
+### 컨테이너 관리
+
+```bash
+# 컨테이너 목록 조회
+nhn objectstorage container list
+nhn os container list  # 별칭
+
+# 컨테이너 메타데이터 조회
+nhn os container describe <container-name>
+
+# 컨테이너 생성
+nhn os container create my-container
+
+# 컨테이너 삭제
+nhn os container delete my-container
+```
+
+### 오브젝트 관리
+
+```bash
+# 오브젝트 목록 조회
+nhn os object list --container my-container
+
+# 파일 업로드
+nhn os object upload --container my-container --file ./test.txt
+
+# 커스텀 이름으로 업로드
+nhn os object upload --container my-container --file ./test.txt --name custom-name.txt
+
+# 오브젝트 다운로드
+nhn os object download test.txt --container my-container
+
+# 저장 경로 지정
+nhn os object download test.txt --container my-container --output-file ./downloads/test.txt
+
+# 오브젝트 메타데이터 조회
+nhn os object describe test.txt --container my-container
+
+# 오브젝트 삭제
+nhn os object delete test.txt --container my-container
+```
+
+---
+
 ## 실전 예제
 
 ### 예제 1: 기본 인프라 구성
@@ -566,6 +626,16 @@ Load Balancer API는 VPC API와 동일한 네트워크 엔드포인트를 사용
 | KR2 | `https://kr2-api-network-infrastructure.nhncloudservice.com` |
 | JP1 | `https://jp1-api-network-infrastructure.nhncloudservice.com` |
 
+### Object Storage API
+
+| 리전 | 엔드포인트 |
+|------|-----------|
+| KR1 | `https://kr1-api-object-storage.nhncloudservice.com` |
+| KR2 | `https://kr2-api-object-storage.nhncloudservice.com` |
+| JP1 | `https://jp1-api-object-storage.nhncloudservice.com` |
+
+Base URL 패턴: `https://{region}-api-object-storage.nhncloudservice.com/v1/AUTH_{TenantID}`
+
 ---
 
 ## API 참조
@@ -630,6 +700,20 @@ Load Balancer API는 VPC API와 동일한 네트워크 엔드포인트를 사용
 | 리스너 조회 | GET | `/v2.0/lbaas/listeners/{listenerId}` |
 | 리스너 생성 | POST | `/v2.0/lbaas/listeners` |
 | 리스너 삭제 | DELETE | `/v2.0/lbaas/listeners/{listenerId}` |
+
+### Object Storage API
+
+| 작업 | Method | 경로 |
+|------|--------|------|
+| 컨테이너 목록 | GET | `/v1/AUTH_{tenantId}?format=json` |
+| 컨테이너 메타데이터 | HEAD | `/v1/AUTH_{tenantId}/{container}` |
+| 컨테이너 생성 | PUT | `/v1/AUTH_{tenantId}/{container}` |
+| 컨테이너 삭제 | DELETE | `/v1/AUTH_{tenantId}/{container}` |
+| 오브젝트 목록 | GET | `/v1/AUTH_{tenantId}/{container}?format=json` |
+| 오브젝트 메타데이터 | HEAD | `/v1/AUTH_{tenantId}/{container}/{object}` |
+| 오브젝트 업로드 | PUT | `/v1/AUTH_{tenantId}/{container}/{object}` |
+| 오브젝트 다운로드 | GET | `/v1/AUTH_{tenantId}/{container}/{object}` |
+| 오브젝트 삭제 | DELETE | `/v1/AUTH_{tenantId}/{container}/{object}` |
 
 ---
 
@@ -751,7 +835,7 @@ nhn --debug compute instance list
 
 - [x] Block Storage 관리
 - [x] Load Balancer 관리
-- [ ] Object Storage 관리
+- [x] Object Storage 관리
 - [ ] Auto Scale 관리
 - [ ] DNS 관리
 - [ ] 자동완성 지원 (bash, zsh, fish)
