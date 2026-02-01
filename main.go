@@ -9,7 +9,9 @@ import (
 	"os"
 
 	"nhncli/cmd"
+	_ "nhncli/cmd/blockstorage"
 	_ "nhncli/cmd/compute"
+	_ "nhncli/cmd/loadbalancer"
 	_ "nhncli/cmd/vpc"
 )
 

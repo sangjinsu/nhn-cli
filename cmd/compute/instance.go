@@ -11,14 +11,14 @@ import (
 )
 
 var (
-	instanceName         string
-	instanceImageID      string
-	instanceFlavorID     string
-	instanceNetworkID    string
-	instanceKeyName      string
+	instanceName          string
+	instanceImageID       string
+	instanceFlavorID      string
+	instanceNetworkID     string
+	instanceKeyName       string
 	instanceSecurityGroup string
-	instanceAZ           string
-	instanceHardReboot   bool
+	instanceAZ            string
+	instanceHardReboot    bool
 )
 
 var instanceCmd = &cobra.Command{

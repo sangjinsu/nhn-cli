@@ -29,7 +29,7 @@ type IdentityRequest struct {
 }
 
 type IdentityAuth struct {
-	TenantID            string                   `json:"tenantId"`
+	TenantID            string                      `json:"tenantId"`
 	PasswordCredentials IdentityPasswordCredentials `json:"passwordCredentials"`
 }
 

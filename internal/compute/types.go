@@ -3,23 +3,23 @@ package compute
 import "time"
 
 type Instance struct {
-	ID          string            `json:"id"`
-	Name        string            `json:"name"`
-	Status      string            `json:"status"`
-	TenantID    string            `json:"tenant_id"`
-	UserID      string            `json:"user_id"`
-	Created     time.Time         `json:"created"`
-	Updated     time.Time         `json:"updated"`
-	Flavor      FlavorRef         `json:"flavor"`
-	Image       ImageRef          `json:"image"`
-	KeyName     string            `json:"key_name"`
-	Addresses   map[string][]Address `json:"addresses"`
-	Metadata    map[string]string `json:"metadata"`
-	SecurityGroups []SecurityGroupRef `json:"security_groups"`
-	AvailabilityZone string `json:"OS-EXT-AZ:availability_zone"`
-	PowerState  int               `json:"OS-EXT-STS:power_state"`
-	VMState     string            `json:"OS-EXT-STS:vm_state"`
-	TaskState   string            `json:"OS-EXT-STS:task_state"`
+	ID               string               `json:"id"`
+	Name             string               `json:"name"`
+	Status           string               `json:"status"`
+	TenantID         string               `json:"tenant_id"`
+	UserID           string               `json:"user_id"`
+	Created          time.Time            `json:"created"`
+	Updated          time.Time            `json:"updated"`
+	Flavor           FlavorRef            `json:"flavor"`
+	Image            ImageRef             `json:"image"`
+	KeyName          string               `json:"key_name"`
+	Addresses        map[string][]Address `json:"addresses"`
+	Metadata         map[string]string    `json:"metadata"`
+	SecurityGroups   []SecurityGroupRef   `json:"security_groups"`
+	AvailabilityZone string               `json:"OS-EXT-AZ:availability_zone"`
+	PowerState       int                  `json:"OS-EXT-STS:power_state"`
+	VMState          string               `json:"OS-EXT-STS:vm_state"`
+	TaskState        string               `json:"OS-EXT-STS:task_state"`
 }
 
 type FlavorRef struct {
@@ -61,15 +61,15 @@ type InstanceCreateRequest struct {
 }
 
 type InstanceCreateBody struct {
-	Name             string            `json:"name"`
-	ImageRef         string            `json:"imageRef"`
-	FlavorRef        string            `json:"flavorRef"`
-	KeyName          string            `json:"key_name,omitempty"`
-	SecurityGroups   []SecurityGroupRef `json:"security_groups,omitempty"`
-	Networks         []NetworkRef      `json:"networks,omitempty"`
-	AvailabilityZone string            `json:"availability_zone,omitempty"`
-	Metadata         map[string]string `json:"metadata,omitempty"`
-	UserData         string            `json:"user_data,omitempty"`
+	Name               string               `json:"name"`
+	ImageRef           string               `json:"imageRef"`
+	FlavorRef          string               `json:"flavorRef"`
+	KeyName            string               `json:"key_name,omitempty"`
+	SecurityGroups     []SecurityGroupRef   `json:"security_groups,omitempty"`
+	Networks           []NetworkRef         `json:"networks,omitempty"`
+	AvailabilityZone   string               `json:"availability_zone,omitempty"`
+	Metadata           map[string]string    `json:"metadata,omitempty"`
+	UserData           string               `json:"user_data,omitempty"`
 	BlockDeviceMapping []BlockDeviceMapping `json:"block_device_mapping_v2,omitempty"`
 }
 
@@ -89,9 +89,9 @@ type BlockDeviceMapping struct {
 }
 
 type InstanceActionRequest struct {
-	Start   *struct{}      `json:"os-start,omitempty"`
-	Stop    *struct{}      `json:"os-stop,omitempty"`
-	Reboot  *RebootAction  `json:"reboot,omitempty"`
+	Start  *struct{}     `json:"os-start,omitempty"`
+	Stop   *struct{}     `json:"os-stop,omitempty"`
+	Reboot *RebootAction `json:"reboot,omitempty"`
 }
 
 type RebootAction struct {
@@ -118,15 +118,15 @@ type FlavorResponse struct {
 }
 
 type Image struct {
-	ID        string            `json:"id"`
-	Name      string            `json:"name"`
-	Status    string            `json:"status"`
-	Created   time.Time         `json:"created"`
-	Updated   time.Time         `json:"updated"`
-	MinDisk   int               `json:"minDisk"`
-	MinRAM    int               `json:"minRam"`
-	Progress  int               `json:"progress"`
-	Metadata  map[string]string `json:"metadata"`
+	ID       string            `json:"id"`
+	Name     string            `json:"name"`
+	Status   string            `json:"status"`
+	Created  time.Time         `json:"created"`
+	Updated  time.Time         `json:"updated"`
+	MinDisk  int               `json:"minDisk"`
+	MinRAM   int               `json:"minRam"`
+	Progress int               `json:"progress"`
+	Metadata map[string]string `json:"metadata"`
 }
 
 type ImageListResponse struct {

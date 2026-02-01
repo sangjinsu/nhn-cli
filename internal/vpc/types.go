@@ -113,25 +113,25 @@ type SecurityGroupRuleCreateRequest struct {
 }
 
 type SecurityGroupRuleCreateBody struct {
-	SecurityGroupID string  `json:"security_group_id"`
-	Direction       string  `json:"direction"`
-	EtherType       string  `json:"ethertype"`
-	Protocol        string  `json:"protocol,omitempty"`
-	PortRangeMin    *int    `json:"port_range_min,omitempty"`
-	PortRangeMax    *int    `json:"port_range_max,omitempty"`
-	RemoteIPPrefix  string  `json:"remote_ip_prefix,omitempty"`
-	RemoteGroupID   string  `json:"remote_group_id,omitempty"`
-	Description     string  `json:"description,omitempty"`
+	SecurityGroupID string `json:"security_group_id"`
+	Direction       string `json:"direction"`
+	EtherType       string `json:"ethertype"`
+	Protocol        string `json:"protocol,omitempty"`
+	PortRangeMin    *int   `json:"port_range_min,omitempty"`
+	PortRangeMax    *int   `json:"port_range_max,omitempty"`
+	RemoteIPPrefix  string `json:"remote_ip_prefix,omitempty"`
+	RemoteGroupID   string `json:"remote_group_id,omitempty"`
+	Description     string `json:"description,omitempty"`
 }
 
 type FloatingIP struct {
-	ID                string  `json:"id"`
-	FloatingIPAddress string  `json:"floating_ip_address"`
-	FloatingNetworkID string  `json:"floating_network_id"`
-	FixedIPAddress    string  `json:"fixed_ip_address"`
-	PortID            string  `json:"port_id"`
-	TenantID          string  `json:"tenant_id"`
-	Status            string  `json:"status"`
+	ID                string `json:"id"`
+	FloatingIPAddress string `json:"floating_ip_address"`
+	FloatingNetworkID string `json:"floating_network_id"`
+	FixedIPAddress    string `json:"fixed_ip_address"`
+	PortID            string `json:"port_id"`
+	TenantID          string `json:"tenant_id"`
+	Status            string `json:"status"`
 }
 
 type FloatingIPListResponse struct {
@@ -160,23 +160,23 @@ type FloatingIPUpdateBody struct {
 }
 
 type RoutingTable struct {
-	ID              string  `json:"id"`
-	Name            string  `json:"name"`
-	TenantID        string  `json:"tenant_id"`
-	DefaultTable    bool    `json:"default_table"`
-	Distributed     bool    `json:"distributed"`
-	State           string  `json:"state"`
-	VPCID           string  `json:"vpc_id"`
-	SubnetCount     int     `json:"subnet_count"`
-	Routes          []Route `json:"routes"`
+	ID           string  `json:"id"`
+	Name         string  `json:"name"`
+	TenantID     string  `json:"tenant_id"`
+	DefaultTable bool    `json:"default_table"`
+	Distributed  bool    `json:"distributed"`
+	State        string  `json:"state"`
+	VPCID        string  `json:"vpc_id"`
+	SubnetCount  int     `json:"subnet_count"`
+	Routes       []Route `json:"routes"`
 }
 
 type Route struct {
-	ID               string `json:"id"`
-	RoutingTableID   string `json:"routingtable_id"`
-	DestinationCIDR  string `json:"cidr"`
-	GatewayID        string `json:"gateway_id"`
-	TenantID         string `json:"tenant_id"`
+	ID              string `json:"id"`
+	RoutingTableID  string `json:"routingtable_id"`
+	DestinationCIDR string `json:"cidr"`
+	GatewayID       string `json:"gateway_id"`
+	TenantID        string `json:"tenant_id"`
 }
 
 type RoutingTableListResponse struct {
@@ -188,16 +188,16 @@ type RoutingTableResponse struct {
 }
 
 type Port struct {
-	ID           string     `json:"id"`
-	Name         string     `json:"name"`
-	NetworkID    string     `json:"network_id"`
-	TenantID     string     `json:"tenant_id"`
-	MACAddress   string     `json:"mac_address"`
-	AdminStateUp bool       `json:"admin_state_up"`
-	Status       string     `json:"status"`
-	DeviceID     string     `json:"device_id"`
-	DeviceOwner  string     `json:"device_owner"`
-	FixedIPs     []FixedIP  `json:"fixed_ips"`
+	ID           string    `json:"id"`
+	Name         string    `json:"name"`
+	NetworkID    string    `json:"network_id"`
+	TenantID     string    `json:"tenant_id"`
+	MACAddress   string    `json:"mac_address"`
+	AdminStateUp bool      `json:"admin_state_up"`
+	Status       string    `json:"status"`
+	DeviceID     string    `json:"device_id"`
+	DeviceOwner  string    `json:"device_owner"`
+	FixedIPs     []FixedIP `json:"fixed_ips"`
 }
 
 type FixedIP struct {
