@@ -100,6 +100,71 @@ Secret Access Key: your-secret-access-key
 
 ---
 
+## 서비스별 AppKey 설정
+
+일부 서비스는 별도의 AppKey가 필요합니다. `nhn configure service` 명령으로 설정합니다.
+
+### 지원 서비스
+
+| 서비스 | 명령어 | 필요 정보 |
+|--------|--------|----------|
+| DNS Plus | `nhn configure service dns` | AppKey |
+| Pipeline | `nhn configure service pipeline` | AppKey |
+| Deploy | `nhn configure service deploy` | AppKey |
+| CDN | `nhn configure service cdn` | AppKey + Secret Key |
+| AppGuard | `nhn configure service appguard` | AppKey |
+| Gamebase | `nhn configure service gamebase` | App ID + Secret Key |
+
+### 설정 예시
+
+```bash
+# DNS Plus AppKey 설정
+nhn configure service dns
+```
+
+대화형 프롬프트:
+```
+프로필 이름 [default]:
+
+=== DNS 서비스 설정 ===
+DNS Plus AppKey: your-dns-appkey
+
+✅ 프로필 'default'의 dns 서비스 설정이 저장되었습니다.
+```
+
+```bash
+# CDN AppKey + Secret Key 설정
+nhn configure service cdn
+```
+
+대화형 프롬프트:
+```
+프로필 이름 [default]:
+
+=== CDN 서비스 설정 ===
+CDN AppKey: your-cdn-appkey
+CDN Secret Key: your-cdn-secret-key
+
+✅ 프로필 'default'의 cdn 서비스 설정이 저장되었습니다.
+```
+
+### 명령줄에서 AppKey 오버라이드
+
+프로필에 저장된 AppKey 대신 `--app-key` 플래그로 직접 지정할 수 있습니다:
+
+```bash
+# DNS Plus
+nhn dns zone list --app-key your-dns-appkey
+
+# CDN (AppKey + Secret Key)
+nhn cdn service list --app-key your-cdn-appkey --secret-key your-cdn-secret-key
+
+# Gamebase (App ID + Secret Key)
+nhn gamebase member describe user123 --app-key your-app-id --secret-key your-secret-key
+```
+
+---
+
 ## 프로필 관리
 
 여러 환경(개발, 스테이징, 운영)을 관리하려면 프로필을 사용하세요.
@@ -179,7 +244,15 @@ NHN_REGION=KR2 nhn compute instance list
       "password": "your-api-password",
       "user_access_key_id": "your-access-key-id",
       "secret_access_key": "your-secret-access-key",
-      "region": "KR1"
+      "region": "KR1",
+      "app_key": "dns-appkey",
+      "pipeline_app_key": "pipeline-appkey",
+      "deploy_app_key": "deploy-appkey",
+      "cdn_app_key": "cdn-appkey",
+      "cdn_secret_key": "cdn-secret-key",
+      "appguard_app_key": "appguard-appkey",
+      "gamebase_app_id": "gamebase-app-id",
+      "gamebase_secret_key": "gamebase-secret-key"
     },
     "prod": {
       "tenant_id": "your-tenant-id",
@@ -193,7 +266,7 @@ NHN_REGION=KR2 nhn compute instance list
 }
 ```
 
-> **참고**: Identity 인증(tenant_id, username, password)과 OAuth 인증(user_access_key_id, secret_access_key) 모두 필수입니다.
+> **참고**: Identity 인증(tenant_id, username, password)과 OAuth 인증(user_access_key_id, secret_access_key) 모두 필수입니다. 서비스별 AppKey는 해당 서비스 사용 시에만 필요합니다.
 
 ### ~/.nhn/credentials.json
 
@@ -261,4 +334,5 @@ chmod 600 ~/.nhn/credentials.json
 
 - [VPC 명령어](Commands/VPC.md)
 - [Compute 명령어](Commands/Compute.md)
+- [DNS Plus 명령어](Commands/DNS.md)
 - [기본 인프라 구성 예제](Examples/Basic-Infrastructure.md)

@@ -8,7 +8,8 @@
 
 - **Go 1.22 이상** - 소스에서 빌드하기 위해 필요
 - **NHN Cloud 계정** - [NHN Cloud 콘솔](https://console.nhncloud.com)에서 가입
-- **인증 정보** - OAuth 키 또는 Identity 정보
+- **인증 정보** - Identity 인증 + OAuth 인증 (필수)
+- **서비스별 AppKey** - DNS, Pipeline, Deploy, CDN, AppGuard, Gamebase 사용 시 필요
 
 ---
 
@@ -86,7 +87,33 @@ Secret Access Key: your-secret-access-key
 
 ---
 
-## 3단계: 첫 명령 실행
+## 3단계: 서비스별 AppKey 설정 (선택)
+
+DNS Plus, Pipeline, Deploy, CDN, AppGuard, Gamebase 서비스를 사용하려면 추가 설정이 필요합니다:
+
+```bash
+# DNS Plus AppKey 설정
+nhn configure service dns
+
+# Pipeline AppKey 설정
+nhn configure service pipeline
+
+# CDN AppKey + Secret Key 설정
+nhn configure service cdn
+
+# Gamebase App ID + Secret Key 설정
+nhn configure service gamebase
+```
+
+또는 명령 실행 시 `--app-key` 플래그로 직접 지정할 수도 있습니다:
+
+```bash
+nhn dns zone list --app-key your-dns-appkey
+```
+
+---
+
+## 4단계: 첫 명령 실행
 
 ### VPC 목록 조회
 
@@ -112,9 +139,21 @@ ID                                      NAME        STATUS  FLAVOR      IP ADDRE
 a1b2c3d4-5678-9abc-def0-123456789abc    web-server  ACTIVE  m2.c1m2     192.168.1.10    kr-pub-a
 ```
 
+### DNS Zone 목록 조회
+
+```bash
+nhn dns zone list
+```
+
+출력 예시:
+```
+ZONE ID                                 NAME            STATUS  RECORDS DESCRIPTION
+550e8400-e29b-41d4-a716-446655440000    example.com.    ACTIVE  5       My Zone
+```
+
 ---
 
-## 4단계: JSON 출력
+## 5단계: JSON 출력
 
 데이터를 프로그래밍 방식으로 처리하려면 JSON 형식으로 출력하세요:
 
@@ -129,12 +168,32 @@ nhn --output json vpc list | jq '.[].name'
 
 ---
 
+## 지원 서비스
+
+| 서비스 | 명령어 | 인증 방식 |
+|--------|--------|----------|
+| VPC | `nhn vpc` | Identity |
+| Compute | `nhn compute` | Identity |
+| Block Storage | `nhn blockstorage` | Identity |
+| Load Balancer | `nhn loadbalancer` (별칭: `nhn lb`) | Identity |
+| Object Storage | `nhn objectstorage` (별칭: `nhn os`) | Identity |
+| DNS Plus | `nhn dns` | AppKey |
+| Pipeline | `nhn pipeline` | AppKey |
+| Deploy | `nhn deploy` | AppKey |
+| CDN | `nhn cdn` | AppKey + Secret Key |
+| AppGuard | `nhn appguard` | AppKey |
+| Gamebase | `nhn gamebase` | AppKey + Secret Key |
+
+---
+
 ## 다음 단계
 
 - [설치 가이드](Installation.md) - 상세 설치 옵션
-- [설정 가이드](Configuration.md) - 다중 프로필 및 고급 설정
+- [설정 가이드](Configuration.md) - 다중 프로필 및 서비스별 AppKey 설정
 - [VPC 명령어](Commands/VPC.md) - VPC 리소스 관리
 - [Compute 명령어](Commands/Compute.md) - 인스턴스 관리
+- [DNS Plus 명령어](Commands/DNS.md) - DNS Zone 및 Record Set 관리
+- [Object Storage 명령어](Commands/ObjectStorage.md) - 오브젝트 스토리지 관리
 - [기본 인프라 구성 예제](Examples/Basic-Infrastructure.md) - 전체 인프라 구성 워크플로우
 
 ---
@@ -146,6 +205,7 @@ nhn --output json vpc list | jq '.[].name'
 nhn --help
 nhn vpc --help
 nhn compute instance --help
+nhn dns zone --help
 ```
 
 문제가 발생하면 [문제 해결](Troubleshooting.md) 가이드를 참조하세요.

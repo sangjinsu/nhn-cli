@@ -26,11 +26,18 @@ a1b2c3d4-...                            web-server  ACTIVE  m2.c1m2     192.168.
 
 | 카테고리 | 기능 |
 |----------|------|
-| **인증** | OAuth 인증, Identity 인증, 토큰 캐싱, 다중 프로필 |
+| **인증** | OAuth 인증, Identity 인증, 토큰 캐싱, 다중 프로필, 서비스별 AppKey 설정 |
 | **VPC** | VPC, 서브넷, 보안 그룹, 플로팅 IP, 라우팅 테이블, 포트 관리 |
 | **Compute** | 인스턴스, Flavor, 이미지, 키페어, 가용성 영역 관리 |
 | **Block Storage** | 볼륨, 스냅샷, 볼륨 타입 관리 |
 | **Load Balancer** | 로드 밸런서, 리스너 관리 |
+| **Object Storage** | 컨테이너, 오브젝트 관리 |
+| **DNS Plus** | Zone, Record Set 관리 |
+| **Pipeline** | 파이프라인 수동 실행 |
+| **Deploy** | 배포 실행, 바이너리 업로드 |
+| **CDN** | CDN 서비스, 캐시 퍼지, 인증 토큰 관리 |
+| **AppGuard** | 비정상 행위 탐지 현황 조회 |
+| **Gamebase** | 회원 관리, 이용 정지 관리, 론칭 상태 조회 |
 
 ---
 
@@ -44,10 +51,31 @@ a1b2c3d4-...                            web-server  ACTIVE  m2.c1m2     192.168.
 
 ### 명령어 참조
 
+#### 인프라 서비스
+
 - [VPC 명령어](Commands/VPC.md) - VPC, 서브넷, 보안 그룹 등
 - [Compute 명령어](Commands/Compute.md) - 인스턴스, 이미지, 키페어 등
 - [Block Storage 명령어](Commands/BlockStorage.md) - 볼륨, 스냅샷 관리
 - [Load Balancer 명령어](Commands/LoadBalancer.md) - 로드 밸런서, 리스너 관리
+
+#### 스토리지 및 네트워크 서비스
+
+- [Object Storage 명령어](Commands/ObjectStorage.md) - 컨테이너, 오브젝트 관리
+- [DNS Plus 명령어](Commands/DNS.md) - Zone, Record Set 관리
+- [CDN 명령어](Commands/CDN.md) - CDN 서비스, 캐시 퍼지 관리
+
+#### 개발 및 배포 서비스
+
+- [Pipeline 명령어](Commands/Pipeline.md) - 파이프라인 실행
+- [Deploy 명령어](Commands/Deploy.md) - 배포 실행, 바이너리 업로드
+
+#### 게임 및 보안 서비스
+
+- [AppGuard 명령어](Commands/AppGuard.md) - 비정상 행위 탐지 현황 조회
+- [Gamebase 명령어](Commands/Gamebase.md) - 회원 관리, 이용 정지 관리
+
+#### 공통
+
 - [전역 옵션](Commands/Global-Options.md) - 모든 명령어 공통 옵션
 
 ### 실전 예제
@@ -87,9 +115,14 @@ sudo mv nhn /usr/local/bin/
 # 2. 인증 설정
 nhn configure
 
-# 3. 리소스 조회
+# 3. 서비스별 AppKey 설정 (필요한 서비스만)
+nhn configure service dns
+nhn configure service cdn
+
+# 4. 리소스 조회
 nhn vpc list
 nhn compute instance list
+nhn dns zone list
 ```
 
 자세한 내용은 [빠른 시작 가이드](Getting-Started.md)를 참조하세요.

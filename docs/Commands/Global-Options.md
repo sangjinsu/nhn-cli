@@ -204,6 +204,56 @@ nhn compute instance create --help
 
 ---
 
+## 서비스별 옵션
+
+AppKey가 필요한 서비스에서 사용할 수 있는 추가 옵션입니다.
+
+### --app-key
+
+프로필에 설정된 AppKey를 오버라이드합니다.
+
+| 대상 서비스 | 설명 |
+|-------------|------|
+| `dns` | DNS Plus AppKey |
+| `pipeline` | Pipeline AppKey |
+| `deploy` | Deploy AppKey |
+| `cdn` | CDN AppKey |
+| `appguard` | AppGuard AppKey |
+| `gamebase` | Gamebase App ID |
+
+### --secret-key
+
+프로필에 설정된 Secret Key를 오버라이드합니다.
+
+| 대상 서비스 | 설명 |
+|-------------|------|
+| `cdn` | CDN Secret Key |
+| `gamebase` | Gamebase Secret Key |
+
+### 예시
+
+```bash
+# DNS Plus - AppKey만 필요
+nhn dns zone list --app-key your-dns-appkey
+
+# Pipeline - AppKey만 필요
+nhn pipeline execute my-pipeline --app-key your-pipeline-appkey
+
+# Deploy - AppKey만 필요
+nhn deploy execute --artifact-id 123 --server-group-id 456 --app-key your-deploy-appkey
+
+# CDN - AppKey + Secret Key 필요
+nhn cdn service list --app-key your-cdn-appkey --secret-key your-cdn-secret-key
+
+# AppGuard - AppKey만 필요
+nhn appguard dashboard --target-date 2024-01-15 --app-key your-appguard-appkey
+
+# Gamebase - AppKey(App ID) + Secret Key 필요
+nhn gamebase member describe user123 --app-key your-app-id --secret-key your-secret-key
+```
+
+---
+
 ## 옵션 조합
 
 여러 전역 옵션을 함께 사용할 수 있습니다.
@@ -216,6 +266,9 @@ nhn --profile production --region KR2 --output json compute instance list
 
 # 디버그 모드로 VPC 목록 조회
 nhn --debug --output json vpc list
+
+# 프로필과 AppKey 오버라이드 조합
+nhn --profile prod dns zone list --app-key custom-appkey
 ```
 
 ---
@@ -251,7 +304,7 @@ nhn --region KR1 vpc list  # KR1 리전 사용
 
 옵션 값 결정 우선순위 (높은 것이 우선):
 
-1. **명령줄 옵션** - `--profile`, `--region` 등
+1. **명령줄 옵션** - `--profile`, `--region`, `--app-key` 등
 2. **환경 변수** - `NHN_PROFILE`, `NHN_REGION` 등
 3. **프로필 설정** - `~/.nhn/config.json`
 4. **기본값** - `default` 프로필, `KR1` 리전
@@ -263,3 +316,4 @@ nhn --region KR1 vpc list  # KR1 리전 사용
 - [설정 가이드](../Configuration.md)
 - [VPC 명령어](VPC.md)
 - [Compute 명령어](Compute.md)
+- [DNS Plus 명령어](DNS.md)
